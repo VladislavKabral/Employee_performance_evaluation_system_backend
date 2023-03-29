@@ -1,6 +1,8 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +21,8 @@ public class Salary {
     private int id;
 
     @Column(name = "salaryValue")
+    @NotEmpty(message = "Salary must be not empty")
+    @Pattern(regexp = "^\\d+$", message = "Salary must contain only numbers")
     private String value;
 
     @Column(name = "salaryDate")

@@ -1,6 +1,7 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class Question {
     private int id;
 
     @Column(name = "questionText")
+    @NotEmpty(message = "Question content must be not empty")
     @Size(min = 10, max = 200, message = "Question content must be between 10 and 200 characters")
     private String text;
 

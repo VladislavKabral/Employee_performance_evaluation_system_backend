@@ -1,6 +1,7 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +20,8 @@ public class Form {
     private int id;
 
     @Column(name = "formName")
-    @Size(min = 4, max = 15, message = "Name of form must be between 4 and 15 characters")
+    @NotEmpty(message = "Name of form must be not empty")
+    @Size(min = 4, max = 50, message = "Name of form must be between 4 and 50 characters")
     private String name;
 
     @OneToMany(mappedBy = "form")

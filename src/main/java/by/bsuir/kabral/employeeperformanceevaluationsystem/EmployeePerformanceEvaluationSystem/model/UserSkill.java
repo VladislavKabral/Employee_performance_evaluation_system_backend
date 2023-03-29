@@ -1,6 +1,7 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,7 @@ public class UserSkill {
     private int id;
 
     @Column(name = "userSkillRate")
+    @Min(value = 0)
     private Double rate;
 
     @Column(name = "userSkillDate")

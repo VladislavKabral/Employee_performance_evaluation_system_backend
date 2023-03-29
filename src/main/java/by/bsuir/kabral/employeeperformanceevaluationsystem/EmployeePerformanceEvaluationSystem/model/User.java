@@ -21,10 +21,12 @@ public class User {
     private int id;
 
     @Column(name = "userLastname")
+    @NotEmpty(message = "Lastname must be not empty")
     @Size(min = 2, max = 20, message = "Lastname must be between 2 and 20 characters")
     private String lastname;
 
     @Column(name = "userFirstname")
+    @NotEmpty(message = "Firstname must be not empty")
     @Size(min = 2, max = 20, message = "Firstname must be between 2 and 20 characters")
     private String firstname;
 
@@ -42,10 +44,11 @@ public class User {
 
     @Column(name = "userEmail")
     @Email
+    @NotEmpty(message = "Email must be not empty")
     private String email;
 
     @Column(name = "userHashPassword")
-    @NotEmpty
+    @NotEmpty(message = "Password must be not empty")
     private String hashPassword;
 
     @ManyToOne
