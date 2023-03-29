@@ -1,9 +1,13 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "FormsQuestions")
+@Getter
+@Setter
 public class FormQuestion {
 
     @Id
