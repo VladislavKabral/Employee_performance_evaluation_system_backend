@@ -1,6 +1,7 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,7 @@ public class Response {
     private Double rate;
 
     @Column(name = "responseText")
+    @Size(min = 10, max = 500, message = "Response content must be between 10 and 500 characters")
     private String text;
 
     @ManyToOne

@@ -1,6 +1,7 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,9 +19,11 @@ public class Skill {
     private int id;
 
     @Column(name = "skillName")
+    @Size(min = 2, max = 50, message = "Name of skill must be between 2 and 50 characters")
     private String name;
 
     @Column(name = "skillDescription")
+    @Size(min = 4, max = 200, message = "Description of skill must be between 4 and 200 characters")
     private String description;
 
     @OneToMany(mappedBy = "skill")

@@ -1,6 +1,7 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +19,7 @@ public class FeedbackStatus {
     private int id;
 
     @Column(name = "feedbackStatusName")
+    @Size(min = 2, max = 15, message = "Name of status feedback must be between 2 and 15 characters")
     private String name;
 
     @OneToMany(mappedBy = "status")

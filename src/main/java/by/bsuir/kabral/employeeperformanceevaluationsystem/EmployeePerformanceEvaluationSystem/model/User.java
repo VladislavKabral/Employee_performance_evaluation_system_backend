@@ -1,6 +1,9 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,9 +21,11 @@ public class User {
     private int id;
 
     @Column(name = "userLastname")
+    @Size(min = 2, max = 20, message = "Lastname must be between 2 and 20 characters")
     private String lastname;
 
     @Column(name = "userFirstname")
+    @Size(min = 2, max = 20, message = "Firstname must be between 2 and 20 characters")
     private String firstname;
 
     @ManyToOne
@@ -36,9 +41,11 @@ public class User {
     private Position position;
 
     @Column(name = "userEmail")
+    @Email
     private String email;
 
     @Column(name = "userHashPassword")
+    @NotEmpty
     private String hashPassword;
 
     @ManyToOne

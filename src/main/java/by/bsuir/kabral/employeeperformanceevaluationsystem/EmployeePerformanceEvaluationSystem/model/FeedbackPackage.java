@@ -1,6 +1,7 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,7 @@ public class FeedbackPackage {
     private int id;
 
     @Column(name = "packageName")
+    @Size(min = 4, max = 30, message = "Name of package must be between 4 and 30 characters")
     private String name;
 
     @Column(name = "packageCreationDate")
