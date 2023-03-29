@@ -3,7 +3,9 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
 @Table(name = "Questions")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Question {
 
     @Id
@@ -33,12 +37,4 @@ public class Question {
 
     @OneToMany(mappedBy = "question")
     private List<Response> responses;
-
-    public Question() {
-    }
-
-    public Question(String text, Skill skill) {
-        this.text = text;
-        this.skill = skill;
-    }
 }

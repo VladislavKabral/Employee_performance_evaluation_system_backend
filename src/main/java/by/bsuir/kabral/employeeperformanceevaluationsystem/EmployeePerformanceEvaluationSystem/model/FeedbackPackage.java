@@ -3,7 +3,9 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -13,6 +15,8 @@ import java.util.List;
 @Table(name = "FeedbackPackages")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class FeedbackPackage {
 
     @Id
@@ -41,15 +45,4 @@ public class FeedbackPackage {
 
     @OneToMany(mappedBy = "feedbackPackage")
     private List<Feedback> feedbacks;
-
-    public FeedbackPackage() {
-    }
-
-    public FeedbackPackage(String name, LocalDate creationDate, Boolean isPublic, Form form, User targetUser) {
-        this.name = name;
-        this.creationDate = creationDate;
-        this.isPublic = isPublic;
-        this.form = form;
-        this.targetUser = targetUser;
-    }
 }

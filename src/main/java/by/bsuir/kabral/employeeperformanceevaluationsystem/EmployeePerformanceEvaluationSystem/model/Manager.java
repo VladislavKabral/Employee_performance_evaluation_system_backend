@@ -1,7 +1,9 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -10,6 +12,8 @@ import java.util.List;
 @Table(name = "Managers")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Manager {
 
     @Id
@@ -22,12 +26,4 @@ public class Manager {
 
     @OneToMany(mappedBy = "manager")
     private List<User> users;
-
-    public Manager() {
-    }
-
-    public Manager(int userId, List<User> users) {
-        this.userId = userId;
-        this.users = users;
-    }
 }

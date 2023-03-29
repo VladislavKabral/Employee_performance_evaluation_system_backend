@@ -3,7 +3,9 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
 @Table(name = "UserStatus")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserStatus {
 
     @Id
@@ -26,12 +30,4 @@ public class UserStatus {
 
     @OneToMany(mappedBy = "status")
     private List<User> users;
-
-    public UserStatus() {
-    }
-
-    public UserStatus(String name, List<User> users) {
-        this.name = name;
-        this.users = users;
-    }
 }

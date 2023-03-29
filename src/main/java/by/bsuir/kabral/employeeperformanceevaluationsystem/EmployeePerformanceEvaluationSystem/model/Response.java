@@ -4,13 +4,17 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "Responses")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Response {
 
     @Id
@@ -34,14 +38,4 @@ public class Response {
     @ManyToOne
     @JoinColumn(name = "responseFeedbackId", referencedColumnName = "feedbackId")
     private Feedback feedback;
-
-    public Response() {
-    }
-
-    public Response(Double rate, String text, Question question, Feedback feedback) {
-        this.rate = rate;
-        this.text = text;
-        this.question = question;
-        this.feedback = feedback;
-    }
 }

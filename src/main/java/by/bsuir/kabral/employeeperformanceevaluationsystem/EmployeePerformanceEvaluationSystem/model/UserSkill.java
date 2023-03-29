@@ -2,7 +2,9 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -11,6 +13,8 @@ import java.time.LocalDate;
 @Table(name = "UserSkills")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserSkill {
 
     @Id
@@ -24,12 +28,4 @@ public class UserSkill {
 
     @Column(name = "userSkillDate")
     private LocalDate date;
-
-    public UserSkill() {
-    }
-
-    public UserSkill(Double rate, LocalDate date) {
-        this.rate = rate;
-        this.date = date;
-    }
 }

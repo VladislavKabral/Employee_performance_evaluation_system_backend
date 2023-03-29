@@ -1,8 +1,7 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,6 +10,8 @@ import java.util.List;
 @Table(name = "Feedbacks")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Feedback {
 
     @Id
@@ -35,14 +36,4 @@ public class Feedback {
 
     @OneToMany(mappedBy = "feedback")
     private List<Response> responses;
-
-    public Feedback() {
-    }
-
-    public Feedback(User sourceUser, FeedbackStatus status, LocalDate date, FeedbackPackage feedbackPackage) {
-        this.sourceUser = sourceUser;
-        this.status = status;
-        this.date = date;
-        this.feedbackPackage = feedbackPackage;
-    }
 }

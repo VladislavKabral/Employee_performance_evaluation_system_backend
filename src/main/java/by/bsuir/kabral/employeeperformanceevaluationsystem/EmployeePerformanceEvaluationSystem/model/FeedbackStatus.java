@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -13,6 +15,8 @@ import java.util.List;
 @Table(name = "FeedbackStatuses")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class FeedbackStatus {
 
     @Id
@@ -28,12 +32,4 @@ public class FeedbackStatus {
 
     @OneToMany(mappedBy = "status")
     private List<Feedback> feedbacks;
-
-    public FeedbackStatus() {
-    }
-
-    public FeedbackStatus(String name, List<Feedback> feedbacks) {
-        this.name = name;
-        this.feedbacks = feedbacks;
-    }
 }

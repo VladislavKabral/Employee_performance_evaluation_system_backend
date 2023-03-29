@@ -1,13 +1,17 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "FormsQuestions")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class FormQuestion {
 
     @Id
@@ -17,11 +21,4 @@ public class FormQuestion {
 
     @Column(name = "formsQuestionsIsRequired")
     private Boolean isRequired;
-
-    public FormQuestion() {
-    }
-
-    public FormQuestion(Boolean isRequired) {
-        this.isRequired = isRequired;
-    }
 }

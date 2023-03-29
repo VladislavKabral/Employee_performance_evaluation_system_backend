@@ -3,7 +3,9 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
 @Table(name = "Forms")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Form {
 
     @Id
@@ -32,12 +36,4 @@ public class Form {
             joinColumns = @JoinColumn(name = "formId"),
             inverseJoinColumns = @JoinColumn(name = "questionId"))
     private List<Question> questions;
-
-    public Form() {
-    }
-
-    public Form(String name, List<FeedbackPackage> feedbackPackages) {
-        this.name = name;
-        this.feedbackPackages = feedbackPackages;
-    }
 }

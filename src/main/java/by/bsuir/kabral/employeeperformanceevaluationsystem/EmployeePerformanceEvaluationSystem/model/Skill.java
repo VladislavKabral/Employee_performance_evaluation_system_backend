@@ -3,7 +3,9 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
 @Table(name = "Skills")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Skill {
 
     @Id
@@ -37,12 +41,4 @@ public class Skill {
             joinColumns = @JoinColumn(name = "skillId"),
             inverseJoinColumns = @JoinColumn(name = "userId"))
     private List<User> users;
-
-    public Skill() {
-    }
-
-    public Skill(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
 }

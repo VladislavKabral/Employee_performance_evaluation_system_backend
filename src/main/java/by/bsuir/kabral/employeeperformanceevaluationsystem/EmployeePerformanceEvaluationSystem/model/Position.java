@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -13,6 +15,8 @@ import java.util.List;
 @Table(name = "Positions")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Position {
 
     @Id
@@ -28,12 +32,4 @@ public class Position {
 
     @OneToMany(mappedBy = "position")
     private List<User> users;
-
-    public Position() {
-    }
-
-    public Position(String name, List<User> users) {
-        this.name = name;
-        this.users = users;
-    }
 }

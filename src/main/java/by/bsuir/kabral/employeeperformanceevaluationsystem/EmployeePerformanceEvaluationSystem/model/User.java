@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -13,6 +15,8 @@ import java.util.List;
 @Table(name = "Users")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -67,19 +71,4 @@ public class User {
 
     @ManyToMany(mappedBy = "users")
     private List<Skill> skills;
-
-    public User() {
-    }
-
-    public User(String lastname, String firstname, Salary salary, Team team, Position position, String email, String hashPassword, User manager, UserStatus status) {
-        this.lastname = lastname;
-        this.firstname = firstname;
-        this.salary = salary;
-        this.team = team;
-        this.position = position;
-        this.email = email;
-        this.hashPassword = hashPassword;
-        this.manager = manager;
-        this.status = status;
-    }
 }

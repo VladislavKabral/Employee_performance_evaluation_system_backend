@@ -3,7 +3,9 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
 @Table(name = "Teams")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Team {
 
     @Id
@@ -26,12 +30,4 @@ public class Team {
 
     @OneToMany(mappedBy = "team")
     private List<User> users;
-
-    public Team() {
-    }
-
-    public Team(String name, List<User> users) {
-        this.name = name;
-        this.users = users;
-    }
 }

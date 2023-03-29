@@ -3,7 +3,9 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -13,6 +15,8 @@ import java.util.List;
 @Table(name = "Salaries")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Salary {
 
     @Id
@@ -30,13 +34,4 @@ public class Salary {
 
     @OneToMany(mappedBy = "salary")
     private List<User> users;
-
-    public Salary() {
-    }
-
-    public Salary(String value, LocalDate date, List<User> users) {
-        this.value = value;
-        this.date = date;
-        this.users = users;
-    }
 }
