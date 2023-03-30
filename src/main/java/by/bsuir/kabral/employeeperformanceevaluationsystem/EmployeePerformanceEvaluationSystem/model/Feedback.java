@@ -30,7 +30,7 @@ public class Feedback {
     private LocalDate date;
 
     @ManyToOne
-    @JoinColumn(name = "feedback_package_id", referencedColumnName = "package_Id")
+    @JoinColumn(name = "feedback_package_id", referencedColumnName = "package_id")
     private FeedbackPackage feedbackPackage;
 
     @OneToMany(mappedBy = "feedback")

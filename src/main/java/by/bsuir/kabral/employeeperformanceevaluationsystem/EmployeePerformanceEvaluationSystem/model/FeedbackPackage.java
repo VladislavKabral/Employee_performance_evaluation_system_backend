@@ -16,7 +16,7 @@ import java.util.List;
 public class FeedbackPackage {
 
     @Id
-    @Column(name = "package_Id")
+    @Column(name = "package_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 

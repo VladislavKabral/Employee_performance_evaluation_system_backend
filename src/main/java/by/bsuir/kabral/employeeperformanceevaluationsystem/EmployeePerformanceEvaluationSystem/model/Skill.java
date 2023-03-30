@@ -1,5 +1,6 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -30,6 +31,7 @@ public class Skill {
     private String description;
 
     @OneToMany(mappedBy = "skill")
+    @JsonManagedReference
     private List<Question> questions;
 
     @ManyToMany(fetch = FetchType.EAGER)

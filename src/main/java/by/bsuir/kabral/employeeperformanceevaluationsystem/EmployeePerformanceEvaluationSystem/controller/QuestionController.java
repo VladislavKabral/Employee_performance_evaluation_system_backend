@@ -62,7 +62,11 @@ public class QuestionController {
     public ResponseEntity<HttpStatus> update(@RequestBody @Valid QuestionDTO questionDTO, @PathVariable("id") int id,
                                              BindingResult bindingResult) {
 
-        questionService.update(convertToQuestion(questionDTO), id);
+        Question question = convertToQuestion(questionDTO);
+        Skill skill = skillService.findByName(questionDTO.getSkill().getName());
+        question.setSkill(skill);
+
+        questionService.update(question, id);
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
