@@ -4,38 +4,37 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "Responses")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Response {
 
     @Id
-    @Column(name = "responseId")
+    @Column(name = "response_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "responseRate")
+    @Column(name = "response_rate")
     @Min(value = 0)
     private Double rate;
 
-    @Column(name = "responseText")
+    @Column(name = "response_text")
     @NotEmpty(message = "Response content must be not empty")
     @Size(min = 10, max = 500, message = "Response content must be between 10 and 500 characters")
     private String text;
 
     @ManyToOne
-    @JoinColumn(name = "responseQuestionId", referencedColumnName = "questionId")
+    @JoinColumn(name = "response_question_id", referencedColumnName = "question_id")
     private Question question;
 
     @ManyToOne
-    @JoinColumn(name = "responseFeedbackId", referencedColumnName = "feedbackId")
+    @JoinColumn(name = "response_feedback_id", referencedColumnName = "feedback_id")
     private Feedback feedback;
+
+    public Response() {
+    }
 }

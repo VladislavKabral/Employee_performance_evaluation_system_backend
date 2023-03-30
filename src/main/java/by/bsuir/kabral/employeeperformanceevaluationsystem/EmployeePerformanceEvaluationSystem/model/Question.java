@@ -3,9 +3,7 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -14,22 +12,20 @@ import java.util.List;
 @Table(name = "Questions")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Question {
 
     @Id
-    @Column(name = "questionId")
+    @Column(name = "question_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "questionText")
+    @Column(name = "question_text")
     @NotEmpty(message = "Question content must be not empty")
     @Size(min = 10, max = 200, message = "Question content must be between 10 and 200 characters")
     private String text;
 
     @ManyToOne
-    @JoinColumn(name = "questionSkillId", referencedColumnName = "skillId")
+    @JoinColumn(name = "question_skill_id", referencedColumnName = "skill_id")
     private Skill skill;
 
     @ManyToMany(mappedBy = "questions")
@@ -37,4 +33,7 @@ public class Question {
 
     @OneToMany(mappedBy = "question")
     private List<Response> responses;
+
+    public Question() {
+    }
 }

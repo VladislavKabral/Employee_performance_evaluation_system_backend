@@ -4,27 +4,23 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
 @Entity
-@Table(name = "FeedbackStatuses")
+@Table(name = "feedback_statuses")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class FeedbackStatus {
 
     @Id
-    @Column(name = "feedbackStatusId")
+    @Column(name = "feedback_status_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "feedbackStatusName")
+    @Column(name = "feedback_status_name")
     @NotEmpty(message = "Name of status feedback must be not empty")
     @Size(min = 2, max = 50, message = "Name of status feedback must be between 2 and 50 characters")
     @Pattern(regexp = "^[a-zA-Z ]+$", message = "Name of status feedback must be contain only letters")
@@ -32,4 +28,7 @@ public class FeedbackStatus {
 
     @OneToMany(mappedBy = "status")
     private List<Feedback> feedbacks;
+
+    public FeedbackStatus() {
+    }
 }

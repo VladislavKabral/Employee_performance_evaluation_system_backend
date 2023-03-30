@@ -32,6 +32,12 @@ public class SkillServiceImpl implements ServiceInterface<Skill> {
         return skill.orElse(null);
     }
 
+    public Skill findByName(String name) {
+        Optional<Skill> skill = Optional.ofNullable(skillRepository.findByName(name));
+
+        return skill.orElse(null);
+    }
+
     @Override
     @Transactional
     public void save(Skill skill) {

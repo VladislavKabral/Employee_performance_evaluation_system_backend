@@ -3,46 +3,45 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "FeedbackPackages")
+@Table(name = "feedback_packages")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class FeedbackPackage {
 
     @Id
-    @Column(name = "packageId")
+    @Column(name = "package_Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "packageName")
+    @Column(name = "package_name")
     @NotEmpty(message = "Name of package must be not empty")
     @Size(min = 4, max = 50, message = "Name of package must be between 4 and 50 characters")
     private String name;
 
-    @Column(name = "packageCreationDate")
+    @Column(name = "package_creation_date")
     private LocalDate creationDate;
 
-    @Column(name = "packageIsPublic")
+    @Column(name = "package_is_public")
     private Boolean isPublic;
 
     @ManyToOne
-    @JoinColumn(name = "packageFormId", referencedColumnName = "formId")
+    @JoinColumn(name = "package_form_id", referencedColumnName = "form_id")
     private Form form;
 
     @ManyToOne
-    @JoinColumn(name = "packageTargetUserId", referencedColumnName = "userId")
+    @JoinColumn(name = "package_target_user_id", referencedColumnName = "user_id")
     private User targetUser;
 
     @OneToMany(mappedBy = "feedbackPackage")
     private List<Feedback> feedbacks;
+
+    public FeedbackPackage() {
+    }
 }

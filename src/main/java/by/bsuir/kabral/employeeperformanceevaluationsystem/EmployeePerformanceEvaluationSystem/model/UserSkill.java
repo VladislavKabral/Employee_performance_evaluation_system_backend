@@ -2,30 +2,29 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "UserSkills")
+@Table(name = "user_skills")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class UserSkill {
 
     @Id
-    @Column(name = "userSkillId")
+    @Column(name = "user_skill_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "userSkillRate")
+    @Column(name = "user_skill_rate")
     @Min(value = 0)
     private Double rate;
 
-    @Column(name = "userSkillDate")
+    @Column(name = "user_skill_date")
     private LocalDate date;
+
+    public UserSkill() {
+    }
 }

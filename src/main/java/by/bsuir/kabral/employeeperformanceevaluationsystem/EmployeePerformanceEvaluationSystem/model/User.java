@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -15,52 +13,50 @@ import java.util.List;
 @Table(name = "Users")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class User {
 
     @Id
-    @Column(name = "userId")
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "userLastname")
+    @Column(name = "user_lastname")
     @NotEmpty(message = "Lastname must be not empty")
     @Size(min = 2, max = 20, message = "Lastname must be between 2 and 20 characters")
     private String lastname;
 
-    @Column(name = "userFirstname")
+    @Column(name = "user_firstname")
     @NotEmpty(message = "Firstname must be not empty")
     @Size(min = 2, max = 20, message = "Firstname must be between 2 and 20 characters")
     private String firstname;
 
     @ManyToOne
-    @JoinColumn(name = "userSalaryId", referencedColumnName = "salaryId")
+    @JoinColumn(name = "user_salary_id", referencedColumnName = "salary_id")
     private Salary salary;
 
     @ManyToOne
-    @JoinColumn(name = "userTeamId", referencedColumnName = "teamId")
+    @JoinColumn(name = "user_team_id", referencedColumnName = "team_id")
     private Team team;
 
     @ManyToOne
-    @JoinColumn(name = "userPositionId", referencedColumnName = "positionId")
+    @JoinColumn(name = "user_position_id", referencedColumnName = "position_id")
     private Position position;
 
-    @Column(name = "userEmail")
+    @Column(name = "user_email")
     @Email
     @NotEmpty(message = "Email must be not empty")
     private String email;
 
-    @Column(name = "userHashPassword")
+    @Column(name = "user_hash_password")
     @NotEmpty(message = "Password must be not empty")
     private String hashPassword;
 
     @ManyToOne
-    @JoinColumn(name = "userManagerId", referencedColumnName = "userId")
-    private User manager;
+    @JoinColumn(name = "user_manager_id", referencedColumnName = "user_id")
+    private Manager manager;
 
     @ManyToOne
-    @JoinColumn(name = "userStatusId", referencedColumnName = "userStatusId")
+    @JoinColumn(name = "user_status_id", referencedColumnName = "user_status_id")
     private UserStatus status;
 
     @OneToMany(mappedBy = "sourceUser")
@@ -71,4 +67,7 @@ public class User {
 
     @ManyToMany(mappedBy = "users")
     private List<Skill> skills;
+
+    public User() {
+    }
 }

@@ -3,9 +3,7 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -14,21 +12,19 @@ import java.util.List;
 @Table(name = "Skills")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Skill {
 
     @Id
-    @Column(name = "skillId")
+    @Column(name = "skill_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "skillName")
+    @Column(name = "skill_name")
     @NotEmpty(message = "Name of skill must be not empty")
     @Size(min = 2, max = 50, message = "Name of skill must be between 2 and 50 characters")
     private String name;
 
-    @Column(name = "skillDescription")
+    @Column(name = "skill_description")
     @NotEmpty(message = "Description of skill must be not empty")
     @Size(min = 4, max = 200, message = "Description of skill must be between 4 and 200 characters")
     private String description;
@@ -37,8 +33,11 @@ public class Skill {
     private List<Question> questions;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "UserSkills",
-            joinColumns = @JoinColumn(name = "skillId"),
-            inverseJoinColumns = @JoinColumn(name = "userId"))
+    @JoinTable(name = "user_skills",
+            joinColumns = @JoinColumn(name = "skill_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users;
+
+    public Skill() {
+    }
 }

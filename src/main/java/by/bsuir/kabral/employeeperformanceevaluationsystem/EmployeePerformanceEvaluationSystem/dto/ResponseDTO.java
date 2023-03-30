@@ -5,17 +5,12 @@ import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEv
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class ResponseDTO {
-
-    private int id;
-
     @Min(value = 0)
     private Double rate;
 
@@ -26,4 +21,7 @@ public class ResponseDTO {
     private Question question;
 
     private Feedback feedback;
+
+    public ResponseDTO() {
+    }
 }
