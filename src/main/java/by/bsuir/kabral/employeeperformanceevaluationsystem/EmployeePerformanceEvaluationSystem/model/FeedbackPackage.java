@@ -35,16 +35,16 @@ public class FeedbackPackage {
 
     @ManyToOne
     @JoinColumn(name = "package_form_id", referencedColumnName = "form_id")
-    @JsonBackReference
+    @JsonBackReference(value = "package_form")
     private Form form;
 
     @ManyToOne
     @JoinColumn(name = "package_target_user_id", referencedColumnName = "user_id")
-    @JsonBackReference
+    @JsonBackReference(value = "package_target_user")
     private User targetUser;
 
     @OneToMany(mappedBy = "feedbackPackage")
-    @JsonManagedReference
+    @JsonManagedReference(value = "feedback_package")
     private List<Feedback> feedbacks;
 
     public FeedbackPackage() {

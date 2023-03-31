@@ -32,6 +32,12 @@ public class PositionServiceImpl implements ServiceInterface<Position> {
         return position.orElse(null);
     }
 
+    public Position findByName(String name) {
+        Optional<Position> position = Optional.ofNullable(positionRepository.findByName(name));
+
+        return position.orElse(null);
+    }
+
     @Override
     @Transactional
     public void save(Position position) {

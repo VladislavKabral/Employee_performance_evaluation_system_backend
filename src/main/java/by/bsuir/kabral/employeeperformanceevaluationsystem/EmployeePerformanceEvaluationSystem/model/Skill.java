@@ -33,7 +33,7 @@ public class Skill {
     private String description;
 
     @OneToMany(mappedBy = "skill")
-    @JsonManagedReference
+    @JsonManagedReference(value = "question_skill")
     private List<Question> questions;
 
     @ManyToMany(fetch = FetchType.EAGER)

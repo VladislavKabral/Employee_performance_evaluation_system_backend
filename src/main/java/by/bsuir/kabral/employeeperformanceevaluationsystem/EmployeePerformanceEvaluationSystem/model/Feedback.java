@@ -22,11 +22,12 @@ public class Feedback {
 
     @ManyToOne
     @JoinColumn(name = "feedback_source_user_id", referencedColumnName = "user_id")
+    @JsonBackReference(value = "user_feedback")
     private User sourceUser;
 
     @ManyToOne
     @JoinColumn(name = "feedback_status_id", referencedColumnName = "feedback_status_id")
-    @JsonBackReference
+    @JsonBackReference(value = "feedback_status")
     private FeedbackStatus status;
 
     @Column(name = "feedback_date")
@@ -34,11 +35,11 @@ public class Feedback {
 
     @ManyToOne
     @JoinColumn(name = "feedback_package_id", referencedColumnName = "package_id")
-    @JsonBackReference
+    @JsonBackReference(value = "feedback_package")
     private FeedbackPackage feedbackPackage;
 
     @OneToMany(mappedBy = "feedback")
-    @JsonManagedReference
+    @JsonManagedReference(value = "feedback_response")
     private List<Response> responses;
 
     public Feedback() {

@@ -28,7 +28,7 @@ public class Position {
     private String name;
 
     @OneToMany(mappedBy = "position")
-    @JsonManagedReference
+    @JsonManagedReference(value = "position_user")
     private List<User> users;
 
     public Position() {

@@ -30,11 +30,12 @@ public class Response {
 
     @ManyToOne
     @JoinColumn(name = "response_question_id", referencedColumnName = "question_id")
-    @JsonBackReference
+    @JsonBackReference(value = "question_response")
     private Question question;
 
     @ManyToOne
     @JoinColumn(name = "response_feedback_id", referencedColumnName = "feedback_id")
+    @JsonBackReference(value = "feedback_response")
     private Feedback feedback;
 
     public Response() {

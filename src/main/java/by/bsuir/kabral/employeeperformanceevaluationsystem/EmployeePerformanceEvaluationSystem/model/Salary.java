@@ -30,7 +30,7 @@ public class Salary {
     private LocalDate date;
 
     @OneToMany(mappedBy = "salary")
-    @JsonManagedReference
+    @JsonManagedReference(value = "salary_user")
     private List<User> users;
 
     public Salary() {

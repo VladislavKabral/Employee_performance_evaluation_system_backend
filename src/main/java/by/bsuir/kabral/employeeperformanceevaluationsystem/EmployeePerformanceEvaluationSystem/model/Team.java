@@ -26,7 +26,7 @@ public class Team {
     private String name;
 
     @OneToMany(mappedBy = "team")
-    @JsonManagedReference
+    @JsonManagedReference(value = "team_user")
     private List<User> users;
 
     public Team() {

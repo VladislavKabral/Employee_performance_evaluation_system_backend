@@ -32,6 +32,12 @@ public class ManagerServiceImpl implements ServiceInterface<Manager> {
         return manager.orElse(null);
     }
 
+    public Manager findByUserId(int userId) {
+        Optional<Manager> manager = Optional.ofNullable(managerRepository.findByUserId(userId));
+
+        return manager.orElse(null);
+    }
+
     @Override
     @Transactional
     public void save(Manager manager) {

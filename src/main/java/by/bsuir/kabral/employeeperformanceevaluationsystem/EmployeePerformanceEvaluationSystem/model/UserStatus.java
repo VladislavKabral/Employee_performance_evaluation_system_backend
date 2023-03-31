@@ -26,7 +26,7 @@ public class UserStatus {
     private String name;
 
     @OneToMany(mappedBy = "status")
-    @JsonManagedReference
+    @JsonManagedReference(value = "user_status")
     private List<User> users;
 
     public UserStatus() {

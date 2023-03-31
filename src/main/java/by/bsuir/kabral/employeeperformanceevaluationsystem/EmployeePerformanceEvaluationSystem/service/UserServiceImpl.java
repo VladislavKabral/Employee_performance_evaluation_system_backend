@@ -1,6 +1,7 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service;
 
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.User;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.UserStatus;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,9 +16,14 @@ public class UserServiceImpl implements ServiceInterface<User> {
 
     private final UserRepository userRepository;
 
+    private final UserStatusServiceImpl userStatusService;
+
+    private static final String USER_STATUS_ACTIVE = "ACTIVE";
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserStatusServiceImpl userStatusService) {
         this.userRepository = userRepository;
+        this.userStatusService = userStatusService;
     }
 
     @Override
@@ -47,6 +53,8 @@ public class UserServiceImpl implements ServiceInterface<User> {
     @Override
     @Transactional
     public void save(User user) {
+        UserStatus userStatus = userStatusService.findByName(USER_STATUS_ACTIVE);
+        user.setStatus(userStatus);
         userRepository.save(user);
     }
 

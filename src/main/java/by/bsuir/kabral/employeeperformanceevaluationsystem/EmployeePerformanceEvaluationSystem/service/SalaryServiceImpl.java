@@ -32,6 +32,12 @@ public class SalaryServiceImpl implements ServiceInterface<Salary> {
         return salary.orElse(null);
     }
 
+    public Salary findByValue(String value) {
+        Optional<Salary> salary = Optional.ofNullable(salaryRepository.findByValue(value));
+
+        return salary.orElse(null);
+    }
+
     @Override
     @Transactional
     public void save(Salary salary) {

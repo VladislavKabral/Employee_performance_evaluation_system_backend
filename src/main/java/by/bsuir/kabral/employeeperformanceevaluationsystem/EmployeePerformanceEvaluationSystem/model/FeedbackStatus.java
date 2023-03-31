@@ -28,7 +28,7 @@ public class FeedbackStatus {
     private String name;
 
     @OneToMany(mappedBy = "status")
-    @JsonManagedReference
+    @JsonManagedReference(value = "feedback_status")
     private List<Feedback> feedbacks;
 
     public FeedbackStatus() {

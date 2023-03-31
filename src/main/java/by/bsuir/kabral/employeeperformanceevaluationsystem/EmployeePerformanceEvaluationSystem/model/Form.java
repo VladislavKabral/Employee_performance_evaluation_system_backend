@@ -28,7 +28,7 @@ public class Form {
     private String name;
 
     @OneToMany(mappedBy = "form")
-    @JsonManagedReference
+    @JsonManagedReference(value = "package_form")
     private List<FeedbackPackage> feedbackPackages;
 
     @ManyToMany(fetch = FetchType.EAGER)

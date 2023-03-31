@@ -36,17 +36,17 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "user_salary_id", referencedColumnName = "salary_id")
-    @JsonBackReference
+    @JsonBackReference(value = "salary_user")
     private Salary salary;
 
     @ManyToOne
     @JoinColumn(name = "user_team_id", referencedColumnName = "team_id")
-    @JsonBackReference
+    @JsonBackReference(value = "team_user")
     private Team team;
 
     @ManyToOne
     @JoinColumn(name = "user_position_id", referencedColumnName = "position_id")
-    @JsonBackReference
+    @JsonBackReference(value = "position_user")
     private Position position;
 
     @Column(name = "user_email")
@@ -60,20 +60,20 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "user_manager_id", referencedColumnName = "user_id")
-    @JsonBackReference
+    @JsonBackReference(value = "manager_user")
     private Manager manager;
 
     @ManyToOne
     @JoinColumn(name = "user_status_id", referencedColumnName = "user_status_id")
-    @JsonBackReference
+    @JsonBackReference(value = "user_status")
     private UserStatus status;
 
     @OneToMany(mappedBy = "sourceUser")
-    @JsonManagedReference
+    @JsonManagedReference(value = "user_feedback")
     private List<Feedback> feedbacks;
 
     @OneToMany(mappedBy = "targetUser")
-    @JsonManagedReference
+    @JsonManagedReference(value = "package_target_user")
     private List<FeedbackPackage> packages;
 
     @ManyToMany(mappedBy = "users")

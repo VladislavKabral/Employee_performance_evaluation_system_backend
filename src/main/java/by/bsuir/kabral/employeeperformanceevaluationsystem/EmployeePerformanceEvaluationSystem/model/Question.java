@@ -30,7 +30,7 @@ public class Question {
 
     @ManyToOne
     @JoinColumn(name = "question_skill_id", referencedColumnName = "skill_id")
-    @JsonBackReference
+    @JsonBackReference(value = "question_skill")
     private Skill skill;
 
     @ManyToMany(mappedBy = "questions")
@@ -38,7 +38,7 @@ public class Question {
     private List<Form> forms;
 
     @OneToMany(mappedBy = "question")
-    @JsonManagedReference
+    @JsonManagedReference(value = "question_response")
     private List<Response> responses;
 
     public Question() {

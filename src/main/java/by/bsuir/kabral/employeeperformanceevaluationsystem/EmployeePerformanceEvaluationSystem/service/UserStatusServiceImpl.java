@@ -32,6 +32,12 @@ public class UserStatusServiceImpl implements ServiceInterface<UserStatus> {
         return userStatus.orElse(null);
     }
 
+    public UserStatus findByName(String name) {
+        Optional<UserStatus> userStatus = Optional.ofNullable(userStatusRepository.findByName(name));
+
+        return userStatus.orElse(null);
+    }
+
     @Override
     @Transactional
     public void save(UserStatus userStatus) {

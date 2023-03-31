@@ -22,7 +22,7 @@ public class Manager {
     private int userId;
 
     @OneToMany(mappedBy = "manager")
-    @JsonManagedReference
+    @JsonManagedReference(value = "manager_user")
     private List<User> users;
 
     public Manager() {
