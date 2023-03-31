@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,12 +33,14 @@ public class FeedbackPackageServiceImpl implements ServiceInterface<FeedbackPack
 
     @Transactional
     public void save(FeedbackPackage feedbackPackage) {
+        feedbackPackage.setCreationDate(LocalDate.now());
         feedbackPackageRepository.save(feedbackPackage);
     }
 
     @Transactional
     public void update(FeedbackPackage feedbackPackage, int id) {
         feedbackPackage.setId(id);
+        feedbackPackage.setCreationDate(LocalDate.now());
         feedbackPackageRepository.save(feedbackPackage);
     }
 

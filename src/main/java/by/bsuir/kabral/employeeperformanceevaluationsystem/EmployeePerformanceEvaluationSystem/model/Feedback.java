@@ -1,5 +1,7 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +26,7 @@ public class Feedback {
 
     @ManyToOne
     @JoinColumn(name = "feedback_status_id", referencedColumnName = "feedback_status_id")
+    @JsonBackReference
     private FeedbackStatus status;
 
     @Column(name = "feedback_date")
@@ -31,9 +34,11 @@ public class Feedback {
 
     @ManyToOne
     @JoinColumn(name = "feedback_package_id", referencedColumnName = "package_id")
+    @JsonBackReference
     private FeedbackPackage feedbackPackage;
 
     @OneToMany(mappedBy = "feedback")
+    @JsonManagedReference
     private List<Response> responses;
 
     public Feedback() {

@@ -1,5 +1,6 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -27,6 +28,7 @@ public class FeedbackStatus {
     private String name;
 
     @OneToMany(mappedBy = "status")
+    @JsonManagedReference
     private List<Feedback> feedbacks;
 
     public FeedbackStatus() {

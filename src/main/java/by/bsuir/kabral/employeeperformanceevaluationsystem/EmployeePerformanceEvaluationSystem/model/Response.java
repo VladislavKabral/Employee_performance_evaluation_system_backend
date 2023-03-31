@@ -1,5 +1,6 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -29,6 +30,7 @@ public class Response {
 
     @ManyToOne
     @JoinColumn(name = "response_question_id", referencedColumnName = "question_id")
+    @JsonBackReference
     private Question question;
 
     @ManyToOne

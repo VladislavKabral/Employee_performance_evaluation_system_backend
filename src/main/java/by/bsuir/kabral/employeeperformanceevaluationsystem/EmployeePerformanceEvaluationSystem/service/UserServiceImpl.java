@@ -32,6 +32,18 @@ public class UserServiceImpl implements ServiceInterface<User> {
         return user.orElse(null);
     }
 
+    public User findByLastnameAndFirstname(String lastname, String firstname) {
+        Optional<User> user = Optional.ofNullable(userRepository.findByLastnameAndFirstname(lastname, firstname));
+
+        return user.orElse(null);
+    }
+
+    public User findByLastname(String lastname) {
+        Optional<User> user = Optional.ofNullable(userRepository.findByLastname(lastname));
+
+        return user.orElse(null);
+    }
+
     @Override
     @Transactional
     public void save(User user) {

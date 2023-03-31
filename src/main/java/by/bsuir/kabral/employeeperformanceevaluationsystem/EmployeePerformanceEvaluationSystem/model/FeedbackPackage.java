@@ -1,6 +1,7 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -39,9 +40,11 @@ public class FeedbackPackage {
 
     @ManyToOne
     @JoinColumn(name = "package_target_user_id", referencedColumnName = "user_id")
+    @JsonBackReference
     private User targetUser;
 
     @OneToMany(mappedBy = "feedbackPackage")
+    @JsonManagedReference
     private List<Feedback> feedbacks;
 
     public FeedbackPackage() {

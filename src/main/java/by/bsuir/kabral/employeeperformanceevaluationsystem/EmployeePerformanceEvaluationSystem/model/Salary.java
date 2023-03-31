@@ -1,5 +1,6 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -29,6 +30,7 @@ public class Salary {
     private LocalDate date;
 
     @OneToMany(mappedBy = "salary")
+    @JsonManagedReference
     private List<User> users;
 
     public Salary() {

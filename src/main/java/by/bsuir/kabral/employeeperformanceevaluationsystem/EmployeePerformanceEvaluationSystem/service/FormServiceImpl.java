@@ -32,6 +32,12 @@ public class FormServiceImpl implements ServiceInterface<Form> {
         return form.orElse(null);
     }
 
+    public Form findByName(String name) {
+        Optional<Form> form = Optional.ofNullable(formRepository.findByName(name));
+
+        return form.orElse(null);
+    }
+
     @Override
     @Transactional
     public void save(Form form) {
