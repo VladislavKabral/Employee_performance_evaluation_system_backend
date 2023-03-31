@@ -1,5 +1,8 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -25,12 +28,14 @@ public class Form {
     private String name;
 
     @OneToMany(mappedBy = "form")
+    @JsonManagedReference
     private List<FeedbackPackage> feedbackPackages;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "forms_questions",
             joinColumns = @JoinColumn(name = "form_id"),
             inverseJoinColumns = @JoinColumn(name = "question_id"))
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private List<Question> questions;
 
     public Form() {

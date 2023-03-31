@@ -15,9 +15,6 @@ public class FormQuestion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "forms_questions_is_required")
-    private Boolean isRequired;
-
     public FormQuestion() {
     }
 }

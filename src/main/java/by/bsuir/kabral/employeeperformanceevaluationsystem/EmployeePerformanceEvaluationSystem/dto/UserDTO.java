@@ -29,7 +29,7 @@ public class UserDTO {
     @NotEmpty(message = "Password must be not empty")
     private String hashPassword;
 
-    private User manager;
+    private Manager manager;
 
     public UserDTO() {
     }

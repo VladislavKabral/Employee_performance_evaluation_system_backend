@@ -32,6 +32,12 @@ public class QuestionServiceImpl implements ServiceInterface<Question> {
         return question.orElse(null);
     }
 
+    public Question findByText(String text) {
+        Optional<Question> question = Optional.ofNullable(questionRepository.findByText(text));
+
+        return question.orElse(null);
+    }
+
     @Override
     @Transactional
     public void save(Question question) {

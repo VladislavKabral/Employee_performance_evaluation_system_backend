@@ -1,5 +1,6 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -33,6 +34,7 @@ public class FeedbackPackage {
 
     @ManyToOne
     @JoinColumn(name = "package_form_id", referencedColumnName = "form_id")
+    @JsonBackReference
     private Form form;
 
     @ManyToOne
