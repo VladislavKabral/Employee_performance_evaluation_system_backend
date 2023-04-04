@@ -9,6 +9,9 @@ import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEv
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.PositionServiceImpl;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.SalaryServiceImpl;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.UserServiceImpl;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.ErrorResponse;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.ManagerException;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.UserException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,12 +56,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDTO getUser(@PathVariable("id") int id) {
+    public UserDTO getUser(@PathVariable("id") int id) throws UserException {
         return convertToUserDTO(userService.findById(id));
     }
 
     @GetMapping("/manager/{managerId}")
-    public List<UserDTO> getManagerUsers(@PathVariable("managerId") int managerId) {
+    public List<UserDTO> getManagerUsers(@PathVariable("managerId") int managerId) throws ManagerException {
         Manager manager = managerService.findById(managerId);
 
         return manager.getUsers()
@@ -67,7 +71,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) throws ManagerException {
 
         User user = convertToUser(userDTO);
         Salary salary = salaryService.findByValue(userDTO.getSalary().getValue());
@@ -85,7 +89,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody @Valid UserDTO userDTO, @PathVariable("id") int id,
-                                             BindingResult bindingResult) {
+                                             BindingResult bindingResult) throws ManagerException {
 
         User user = convertToUser(userDTO);
         Salary salary = salaryService.findByValue(userDTO.getSalary().getValue());
@@ -107,6 +111,13 @@ public class UserController {
         userService.deleteById(id);
 
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleResponse(Exception exception) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), LocalDateTime.now());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     private User convertToUser(UserDTO userDTO) {

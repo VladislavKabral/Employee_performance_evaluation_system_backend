@@ -2,6 +2,7 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Skill;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.SkillRepository;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.SkillException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,16 +27,24 @@ public class SkillServiceImpl implements ServiceInterface<Skill> {
     }
 
     @Override
-    public Skill findById(int id) {
+    public Skill findById(int id) throws SkillException {
         Optional<Skill> skill = skillRepository.findById(id);
 
-        return skill.orElse(null);
+        if (skill.isEmpty()) {
+            throw new SkillException("Skill not found");
+        }
+
+        return skill.get();
     }
 
-    public Skill findByName(String name) {
+    public Skill findByName(String name) throws SkillException {
         Optional<Skill> skill = Optional.ofNullable(skillRepository.findByName(name));
 
-        return skill.orElse(null);
+        if (skill.isEmpty()) {
+            throw new SkillException("Skill not found");
+        }
+
+        return skill.get();
     }
 
     @Override

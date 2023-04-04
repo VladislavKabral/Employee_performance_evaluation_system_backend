@@ -3,6 +3,8 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.dto.TeamDTO;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Team;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.TeamServiceImpl;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.ErrorResponse;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.TeamException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,12 +41,16 @@ public class TeamController {
     }
 
     @GetMapping("/{id}")
-    public TeamDTO  getTeam(@PathVariable("id") int id) {
+    public TeamDTO  getTeam(@PathVariable("id") int id) throws TeamException {
         return convertToTeamDTO(teamService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid TeamDTO teamDTO, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid TeamDTO teamDTO, BindingResult bindingResult) throws TeamException {
+
+        if (bindingResult.hasErrors()) {
+            throw new TeamException(Objects.requireNonNull(bindingResult.getFieldError("name")).getDefaultMessage());
+        }
 
         teamService.save(convertToTeam(teamDTO));
 
@@ -51,7 +59,11 @@ public class TeamController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody @Valid TeamDTO teamDTO, @PathVariable("id") int id,
-                                             BindingResult bindingResult) {
+                                             BindingResult bindingResult) throws TeamException {
+
+        if (bindingResult.hasErrors()) {
+            throw new TeamException(Objects.requireNonNull(bindingResult.getFieldError("name")).getDefaultMessage());
+        }
 
         teamService.update(convertToTeam(teamDTO), id);
 
@@ -64,6 +76,13 @@ public class TeamController {
         teamService.deleteById(id);
 
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleResponse(Exception exception) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), LocalDateTime.now());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     private Team convertToTeam(TeamDTO teamDTO) {

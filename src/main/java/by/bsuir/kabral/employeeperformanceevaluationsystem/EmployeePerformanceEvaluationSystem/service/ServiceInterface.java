@@ -1,11 +1,13 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service;
 
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.*;
+
 import java.util.List;
 
 public interface ServiceInterface<T> {
     List<T> findAll();
 
-    T findById(int id);
+    T findById(int id) throws FeedbackException, FeedbackPackageException, FormException, ManagerException, QuestionException, SkillException, TeamException, UserException;
 
     void save(T t);
 

@@ -5,6 +5,9 @@ import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEv
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Skill;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.QuestionServiceImpl;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.SkillServiceImpl;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.ErrorResponse;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.QuestionException;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.SkillException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,12 +46,12 @@ public class QuestionController {
     }
 
     @GetMapping("/{id}")
-    public QuestionDTO getQuestion(@PathVariable("id") int id) {
+    public QuestionDTO getQuestion(@PathVariable("id") int id) throws QuestionException {
         return convertToQuestionDTO(questionService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid QuestionDTO questionDTO, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid QuestionDTO questionDTO, BindingResult bindingResult) throws SkillException {
 
         Question question = convertToQuestion(questionDTO);
         Skill skill = skillService.findByName(questionDTO.getSkill().getName());
@@ -60,7 +64,7 @@ public class QuestionController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody @Valid QuestionDTO questionDTO, @PathVariable("id") int id,
-                                             BindingResult bindingResult) {
+                                             BindingResult bindingResult) throws SkillException {
 
         Question question = convertToQuestion(questionDTO);
         Skill skill = skillService.findByName(questionDTO.getSkill().getName());
@@ -77,6 +81,13 @@ public class QuestionController {
         questionService.deleteById(id);
 
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleResponse(Exception exception) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), LocalDateTime.now());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     private Question convertToQuestion(QuestionDTO questionDTO) {

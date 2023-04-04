@@ -6,6 +6,7 @@ import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEv
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Response;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.User;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.*;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.*;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,7 +54,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<FeedbackDTO> getUserFeedbacks(@PathVariable("userId") int userId) {
+    public List<FeedbackDTO> getUserFeedbacks(@PathVariable("userId") int userId) throws UserException {
         User user = userService.findById(userId);
 
         return user.getFeedbacks()
@@ -62,7 +64,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/package/{feedbackPackageId}")
-    public List<FeedbackDTO> getFeedbacks(@PathVariable("feedbackPackageId") int feedbackPackageId) {
+    public List<FeedbackDTO> getFeedbacks(@PathVariable("feedbackPackageId") int feedbackPackageId) throws FeedbackPackageException {
         FeedbackPackage feedbackPackage = feedbackPackageService.findById(feedbackPackageId);
 
         return feedbackPackage.getFeedbacks()
@@ -72,12 +74,12 @@ public class FeedbackController {
     }
 
     @GetMapping("/{id}")
-    public FeedbackDTO getFeedback(@PathVariable("id") int id) {
+    public FeedbackDTO getFeedback(@PathVariable("id") int id) throws FeedbackException {
         return convertToFeedbackDTO(feedbackService.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid FeedbackDTO feedbackDTO, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid FeedbackDTO feedbackDTO, BindingResult bindingResult) throws QuestionException {
 
         Feedback feedback = convertToFeedback(feedbackDTO);
         List<Response> responses = feedbackDTO.getResponses();
@@ -94,7 +96,7 @@ public class FeedbackController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody @Valid FeedbackDTO feedbackDTO, @PathVariable("id") int id,
-                                             BindingResult bindingResult) {
+                                             BindingResult bindingResult) throws FeedbackException, QuestionException {
         Feedback feedback = feedbackService.findById(id);
         List<Response> responses = feedbackDTO.getResponses();
 
@@ -116,6 +118,13 @@ public class FeedbackController {
         feedbackService.deleteById(id);
 
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleException(Exception exception) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), LocalDateTime.now());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     private Feedback convertToFeedback(FeedbackDTO feedbackDTO) {

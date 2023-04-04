@@ -2,6 +2,7 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Form;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.FormRepository;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.FormException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,16 +27,24 @@ public class FormServiceImpl implements ServiceInterface<Form> {
     }
 
     @Override
-    public Form findById(int id) {
+    public Form findById(int id) throws FormException {
         Optional<Form> form = formRepository.findById(id);
 
-        return form.orElse(null);
+        if (form.isEmpty()) {
+            throw new FormException("Form not found");
+        }
+
+        return form.get();
     }
 
-    public Form findByName(String name) {
+    public Form findByName(String name) throws FormException {
         Optional<Form> form = Optional.ofNullable(formRepository.findByName(name));
 
-        return form.orElse(null);
+        if (form.isEmpty()) {
+            throw new FormException("Form not found");
+        }
+
+        return form.get();
     }
 
     @Override

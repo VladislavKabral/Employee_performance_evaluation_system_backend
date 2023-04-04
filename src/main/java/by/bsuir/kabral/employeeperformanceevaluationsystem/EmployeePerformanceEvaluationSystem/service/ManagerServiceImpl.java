@@ -2,6 +2,7 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Manager;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.ManagerRepository;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.ManagerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,16 +27,24 @@ public class ManagerServiceImpl implements ServiceInterface<Manager> {
     }
 
     @Override
-    public Manager findById(int id) {
+    public Manager findById(int id) throws ManagerException {
         Optional<Manager> manager = managerRepository.findById(id);
 
-        return manager.orElse(null);
+        if (manager.isEmpty()) {
+            throw new ManagerException("Manager not found");
+        }
+
+        return manager.get();
     }
 
-    public Manager findByUserId(int userId) {
+    public Manager findByUserId(int userId) throws ManagerException {
         Optional<Manager> manager = Optional.ofNullable(managerRepository.findByUserId(userId));
 
-        return manager.orElse(null);
+        if (manager.isEmpty()) {
+            throw new ManagerException("Manager not found");
+        }
+
+        return manager.get();
     }
 
     @Override

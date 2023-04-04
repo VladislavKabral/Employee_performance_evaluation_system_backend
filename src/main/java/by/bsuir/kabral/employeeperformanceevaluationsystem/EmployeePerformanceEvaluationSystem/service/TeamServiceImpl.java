@@ -2,6 +2,7 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Team;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.TeamRepository;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.TeamException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +27,24 @@ public class TeamServiceImpl implements ServiceInterface<Team> {
     }
 
     @Override
-    public Team findById(int id) {
+    public Team findById(int id) throws TeamException {
         Optional<Team> team = teamRepository.findById(id);
 
-        return team.orElse(null);
+        if (team.isEmpty()) {
+            throw new TeamException("Team not found");
+        }
+
+        return team.get();
+    }
+
+    public Team findByName(String name) throws TeamException {
+        Optional<Team> team = Optional.ofNullable(teamRepository.findByName(name));
+
+        if (team.isEmpty()) {
+            throw new TeamException("Team not found");
+        }
+
+        return team.get();
     }
 
     @Override

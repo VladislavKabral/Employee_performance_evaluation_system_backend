@@ -2,6 +2,7 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Question;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.QuestionRepository;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.QuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,16 +27,24 @@ public class QuestionServiceImpl implements ServiceInterface<Question> {
     }
 
     @Override
-    public Question findById(int id) {
+    public Question findById(int id) throws QuestionException {
         Optional<Question> question = questionRepository.findById(id);
 
-        return question.orElse(null);
+        if (question.isEmpty()) {
+            throw new QuestionException("Question not found");
+        }
+
+        return question.get();
     }
 
-    public Question findByText(String text) {
+    public Question findByText(String text) throws QuestionException {
         Optional<Question> question = Optional.ofNullable(questionRepository.findByText(text));
 
-        return question.orElse(null);
+        if (question.isEmpty()) {
+            throw new QuestionException("Question not found");
+        }
+
+        return question.get();
     }
 
     @Override

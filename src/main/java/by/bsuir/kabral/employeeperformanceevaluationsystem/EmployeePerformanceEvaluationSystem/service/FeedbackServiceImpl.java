@@ -2,6 +2,7 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Feedback;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.FeedbackRepository;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.FeedbackException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,10 +34,14 @@ public class FeedbackServiceImpl implements ServiceInterface<Feedback> {
     }
 
     @Override
-    public Feedback findById(int id) {
+    public Feedback findById(int id) throws FeedbackException {
         Optional<Feedback> feedback = feedbackRepository.findById(id);
 
-        return feedback.orElse(null);
+        if (feedback.isEmpty()) {
+            throw new FeedbackException("Feedback not found");
+        }
+
+        return feedback.get();
     }
 
     @Override

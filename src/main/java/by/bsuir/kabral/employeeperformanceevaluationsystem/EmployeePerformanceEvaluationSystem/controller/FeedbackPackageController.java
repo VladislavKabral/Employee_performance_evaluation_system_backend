@@ -7,6 +7,10 @@ import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEv
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Form;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.User;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.*;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.ErrorResponse;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.FeedbackPackageException;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.FormException;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.UserException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,12 +62,12 @@ public class FeedbackPackageController {
     }
 
     @GetMapping("/{id}")
-    public FeedbackPackageDTO getPackage(@PathVariable("id") int id) {
+    public FeedbackPackageDTO getPackage(@PathVariable("id") int id) throws FeedbackPackageException {
         return convertToFeedbackPackageDTO(feedbackPackageService.findById(id));
     }
 
     @GetMapping("/user/{userId}")
-    public List<FeedbackPackageDTO> getUserPackages(@PathVariable("userId") int userId) {
+    public List<FeedbackPackageDTO> getUserPackages(@PathVariable("userId") int userId) throws UserException {
         User user = userService.findById(userId);
 
         return user.getPackages()
@@ -73,7 +78,7 @@ public class FeedbackPackageController {
 
     @PostMapping
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid FeedbackPackageDTO feedbackPackageDTO,
-                                             BindingResult bindingResult) {
+                                             BindingResult bindingResult) throws FormException, UserException {
 
         FeedbackPackage feedbackPackage = convertToFeedbackPackage(feedbackPackageDTO);
         Form form = formService.findByName(feedbackPackageDTO.getForm().getName());
@@ -90,7 +95,7 @@ public class FeedbackPackageController {
 
     @PatchMapping("/{id}/request")
     public ResponseEntity<HttpStatus> sendRequestToFeedback(@RequestBody @Valid RequestToFeedbackDTO requestToFeedbackDTO,
-                                                            @PathVariable("id") int id) {
+                                                            @PathVariable("id") int id) throws FeedbackPackageException, UserException {
 
         FeedbackPackage feedbackPackage = feedbackPackageService.findById(id);
         List<User> users = new ArrayList<>(requestToFeedbackDTO.getUsers().size());
@@ -119,7 +124,7 @@ public class FeedbackPackageController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody @Valid FeedbackPackageDTO feedbackPackageDTO,
-                                             @PathVariable("id") int id, BindingResult bindingResult) {
+                                             @PathVariable("id") int id, BindingResult bindingResult) throws FormException, UserException {
 
         FeedbackPackage feedbackPackage = convertToFeedbackPackage(feedbackPackageDTO);
         Form form = formService.findByName(feedbackPackageDTO.getForm().getName());
@@ -140,6 +145,13 @@ public class FeedbackPackageController {
         feedbackPackageService.deleteById(id);
 
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleException(Exception exception) {
+        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage(), LocalDateTime.now());
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     private FeedbackPackage convertToFeedbackPackage(FeedbackPackageDTO feedbackPackageDTO) {
