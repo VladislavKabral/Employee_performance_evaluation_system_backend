@@ -31,6 +31,12 @@ public class FeedbackStatusServiceImpl implements ServiceInterface<FeedbackStatu
         return feedbackStatus.orElse(null);
     }
 
+    public FeedbackStatus findByName(String name) {
+        Optional<FeedbackStatus> feedbackStatus = Optional.ofNullable(feedbackStatusRepository.findByName(name));
+
+        return feedbackStatus.orElse(null);
+    }
+
     @Override
     @Transactional
     public void save(FeedbackStatus feedbackStatus) {

@@ -56,6 +56,16 @@ public class UserController {
         return convertToUserDTO(userService.findById(id));
     }
 
+    @GetMapping("/manager/{managerId}")
+    public List<UserDTO> getManagerUsers(@PathVariable("managerId") int managerId) {
+        Manager manager = managerService.findById(managerId);
+
+        return manager.getUsers()
+                .stream()
+                .map(this::convertToUserDTO)
+                .collect(Collectors.toList());
+    }
+
     @PostMapping
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) {
 
