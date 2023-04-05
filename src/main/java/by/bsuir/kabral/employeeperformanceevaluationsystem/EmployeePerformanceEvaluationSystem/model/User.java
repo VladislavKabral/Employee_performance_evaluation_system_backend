@@ -50,7 +50,7 @@ public class User {
     private Position position;
 
     @Column(name = "user_email")
-    @Email
+    @Email(message = "Field Email must have email format")
     @NotEmpty(message = "Email must be not empty")
     private String email;
 

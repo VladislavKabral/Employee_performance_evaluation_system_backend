@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -49,7 +49,13 @@ public class TeamController {
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid TeamDTO teamDTO, BindingResult bindingResult) throws TeamException {
 
         if (bindingResult.hasErrors()) {
-            throw new TeamException(Objects.requireNonNull(bindingResult.getFieldError("name")).getDefaultMessage());
+            StringBuilder message = new StringBuilder();
+
+            for (FieldError error: bindingResult.getFieldErrors()) {
+                message.append(error.getDefaultMessage()).append(". ");
+            }
+
+            throw new TeamException(message.toString());
         }
 
         teamService.save(convertToTeam(teamDTO));
@@ -62,7 +68,13 @@ public class TeamController {
                                              BindingResult bindingResult) throws TeamException {
 
         if (bindingResult.hasErrors()) {
-            throw new TeamException(Objects.requireNonNull(bindingResult.getFieldError("name")).getDefaultMessage());
+            StringBuilder message = new StringBuilder();
+
+            for (FieldError error: bindingResult.getFieldErrors()) {
+                message.append(error.getDefaultMessage()).append(". ");
+            }
+
+            throw new TeamException(message.toString());
         }
 
         teamService.update(convertToTeam(teamDTO), id);

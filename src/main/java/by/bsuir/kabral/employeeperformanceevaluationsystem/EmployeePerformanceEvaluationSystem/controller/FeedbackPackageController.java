@@ -7,16 +7,14 @@ import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEv
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Form;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.User;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.*;
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.ErrorResponse;
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.FeedbackPackageException;
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.FormException;
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.UserException;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.*;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -78,7 +76,17 @@ public class FeedbackPackageController {
 
     @PostMapping
     public ResponseEntity<HttpStatus> create(@RequestBody @Valid FeedbackPackageDTO feedbackPackageDTO,
-                                             BindingResult bindingResult) throws FormException, UserException {
+                                             BindingResult bindingResult) throws FormException, UserException, FeedbackPackageException {
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder message = new StringBuilder();
+
+            for (FieldError error: bindingResult.getFieldErrors()) {
+                message.append(error.getDefaultMessage()).append(". ");
+            }
+
+            throw new FeedbackPackageException(message.toString());
+        }
 
         FeedbackPackage feedbackPackage = convertToFeedbackPackage(feedbackPackageDTO);
         Form form = formService.findByName(feedbackPackageDTO.getForm().getName());
@@ -124,7 +132,17 @@ public class FeedbackPackageController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody @Valid FeedbackPackageDTO feedbackPackageDTO,
-                                             @PathVariable("id") int id, BindingResult bindingResult) throws FormException, UserException {
+                                             @PathVariable("id") int id, BindingResult bindingResult) throws FormException, UserException, FeedbackPackageException {
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder message = new StringBuilder();
+
+            for (FieldError error: bindingResult.getFieldErrors()) {
+                message.append(error.getDefaultMessage()).append(". ");
+            }
+
+            throw new FeedbackPackageException(message.toString());
+        }
 
         FeedbackPackage feedbackPackage = convertToFeedbackPackage(feedbackPackageDTO);
         Form form = formService.findByName(feedbackPackageDTO.getForm().getName());

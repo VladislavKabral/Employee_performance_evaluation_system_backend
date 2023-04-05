@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -71,7 +72,17 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) throws ManagerException {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid UserDTO userDTO, BindingResult bindingResult) throws ManagerException, UserException {
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder message = new StringBuilder();
+
+            for (FieldError error: bindingResult.getFieldErrors()) {
+                message.append(error.getDefaultMessage()).append(". ");
+            }
+
+            throw new UserException(message.toString());
+        }
 
         User user = convertToUser(userDTO);
         Salary salary = salaryService.findByValue(userDTO.getSalary().getValue());
@@ -89,7 +100,17 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody @Valid UserDTO userDTO, @PathVariable("id") int id,
-                                             BindingResult bindingResult) throws ManagerException {
+                                             BindingResult bindingResult) throws ManagerException, UserException {
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder message = new StringBuilder();
+
+            for (FieldError error: bindingResult.getFieldErrors()) {
+                message.append(error.getDefaultMessage()).append(". ");
+            }
+
+            throw new UserException(message.toString());
+        }
 
         User user = convertToUser(userDTO);
         Salary salary = salaryService.findByValue(userDTO.getSalary().getValue());

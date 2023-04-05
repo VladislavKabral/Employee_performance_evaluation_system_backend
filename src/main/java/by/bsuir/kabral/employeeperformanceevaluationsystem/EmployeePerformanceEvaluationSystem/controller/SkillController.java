@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -45,7 +46,17 @@ public class SkillController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid SkillDTO skillDTO, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid SkillDTO skillDTO, BindingResult bindingResult) throws SkillException {
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder message = new StringBuilder();
+
+            for (FieldError error: bindingResult.getFieldErrors()) {
+                message.append(error.getDefaultMessage()).append(". ");
+            }
+
+            throw new SkillException(message.toString());
+        }
 
         skillService.save(convertToSkill(skillDTO));
 
@@ -54,7 +65,17 @@ public class SkillController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody @Valid SkillDTO skillDTO, @PathVariable("id") int id,
-                                             BindingResult bindingResult) {
+                                             BindingResult bindingResult) throws SkillException {
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder message = new StringBuilder();
+
+            for (FieldError error: bindingResult.getFieldErrors()) {
+                message.append(error.getDefaultMessage()).append(". ");
+            }
+
+            throw new SkillException(message.toString());
+        }
 
         skillService.update(convertToSkill(skillDTO), id);
 

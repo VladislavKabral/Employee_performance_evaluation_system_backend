@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -51,7 +52,17 @@ public class QuestionController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid QuestionDTO questionDTO, BindingResult bindingResult) throws SkillException {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid QuestionDTO questionDTO, BindingResult bindingResult) throws SkillException, QuestionException {
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder message = new StringBuilder();
+
+            for (FieldError error: bindingResult.getFieldErrors()) {
+                message.append(error.getDefaultMessage()).append(". ");
+            }
+
+            throw new QuestionException(message.toString());
+        }
 
         Question question = convertToQuestion(questionDTO);
         Skill skill = skillService.findByName(questionDTO.getSkill().getName());
@@ -64,7 +75,17 @@ public class QuestionController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody @Valid QuestionDTO questionDTO, @PathVariable("id") int id,
-                                             BindingResult bindingResult) throws SkillException {
+                                             BindingResult bindingResult) throws SkillException, QuestionException {
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder message = new StringBuilder();
+
+            for (FieldError error: bindingResult.getFieldErrors()) {
+                message.append(error.getDefaultMessage()).append(". ");
+            }
+
+            throw new QuestionException(message.toString());
+        }
 
         Question question = convertToQuestion(questionDTO);
         Skill skill = skillService.findByName(questionDTO.getSkill().getName());

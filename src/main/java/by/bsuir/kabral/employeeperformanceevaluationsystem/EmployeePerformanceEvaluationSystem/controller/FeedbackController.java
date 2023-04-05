@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -79,7 +80,17 @@ public class FeedbackController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid FeedbackDTO feedbackDTO, BindingResult bindingResult) throws QuestionException {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid FeedbackDTO feedbackDTO, BindingResult bindingResult) throws QuestionException, FeedbackException {
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder message = new StringBuilder();
+
+            for (FieldError error: bindingResult.getFieldErrors()) {
+                message.append(error.getDefaultMessage()).append(". ");
+            }
+
+            throw new FeedbackException(message.toString());
+        }
 
         Feedback feedback = convertToFeedback(feedbackDTO);
         List<Response> responses = feedbackDTO.getResponses();
@@ -97,6 +108,17 @@ public class FeedbackController {
     @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody @Valid FeedbackDTO feedbackDTO, @PathVariable("id") int id,
                                              BindingResult bindingResult) throws FeedbackException, QuestionException {
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder message = new StringBuilder();
+
+            for (FieldError error: bindingResult.getFieldErrors()) {
+                message.append(error.getDefaultMessage()).append(". ");
+            }
+
+            throw new FeedbackException(message.toString());
+        }
+
         Feedback feedback = feedbackService.findById(id);
         List<Response> responses = feedbackDTO.getResponses();
 

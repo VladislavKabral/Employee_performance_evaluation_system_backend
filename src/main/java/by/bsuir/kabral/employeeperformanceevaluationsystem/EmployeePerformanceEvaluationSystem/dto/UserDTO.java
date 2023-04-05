@@ -22,7 +22,7 @@ public class UserDTO {
 
     private Position position;
 
-    @Email
+    @Email(message = "Field Email must have email format")
     @NotEmpty(message = "Email must be not empty")
     private String email;
 

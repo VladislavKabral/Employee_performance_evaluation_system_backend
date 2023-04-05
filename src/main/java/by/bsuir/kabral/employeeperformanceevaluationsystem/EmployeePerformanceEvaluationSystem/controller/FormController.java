@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -52,7 +53,17 @@ public class FormController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid FormDTO formDTO, BindingResult bindingResult) throws QuestionException {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid FormDTO formDTO, BindingResult bindingResult) throws QuestionException, FormException {
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder message = new StringBuilder();
+
+            for (FieldError error: bindingResult.getFieldErrors()) {
+                message.append(error.getDefaultMessage()).append(". ");
+            }
+
+            throw new FormException(message.toString());
+        }
 
         List<Question> questions = formDTO.getQuestions();
         List<Question> questionsFromDB = new ArrayList<>(questions.size());
@@ -71,7 +82,17 @@ public class FormController {
 
     @PatchMapping("{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody FormDTO formDTO, @PathVariable("id") int id,
-                                             BindingResult bindingResult) throws QuestionException {
+                                             BindingResult bindingResult) throws QuestionException, FormException {
+
+        if (bindingResult.hasErrors()) {
+            StringBuilder message = new StringBuilder();
+
+            for (FieldError error: bindingResult.getFieldErrors()) {
+                message.append(error.getDefaultMessage()).append(". ");
+            }
+
+            throw new FormException(message.toString());
+        }
 
         List<Question> questions = formDTO.getQuestions();
         List<Question> questionsFromDB = new ArrayList<>(questions.size());
