@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/forms")
+@CrossOrigin(origins = "http://localhost:8080")
 public class FormController {
 
     private final FormServiceImpl formService;

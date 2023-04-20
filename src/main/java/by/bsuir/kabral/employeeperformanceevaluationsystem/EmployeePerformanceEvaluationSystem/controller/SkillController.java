@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/skills")
+@CrossOrigin(origins = "http://localhost:8080")
 public class SkillController {
 
     private final SkillServiceImpl skillService;
