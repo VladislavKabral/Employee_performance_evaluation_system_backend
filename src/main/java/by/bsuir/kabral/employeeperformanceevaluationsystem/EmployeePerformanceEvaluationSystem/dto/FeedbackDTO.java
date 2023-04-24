@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 public class FeedbackDTO {
 
+    private int id;
     private List<Response> responses;
 
     public FeedbackDTO() {

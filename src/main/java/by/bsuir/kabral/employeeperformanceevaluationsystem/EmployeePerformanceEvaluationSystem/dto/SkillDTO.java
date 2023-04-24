@@ -9,6 +9,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SkillDTO {
+
+    private int id;
+
     @NotEmpty(message = "Name of skill must be not empty")
     @Size(min = 2, max = 50, message = "Name of skill must be between 2 and 50 characters")
     private String name;

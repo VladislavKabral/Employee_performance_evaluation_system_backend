@@ -9,6 +9,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class QuestionDTO {
+
+    private int id;
+
     @NotEmpty(message = "Question content must be not empty")
     @Size(min = 10, max = 200, message = "Question content must be between 10 and 200 characters")
     private String text;

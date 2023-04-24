@@ -2,9 +2,12 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.dto.TeamDTO;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Team;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.User;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.TeamServiceImpl;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.UserServiceImpl;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.ErrorResponse;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.TeamException;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.UserException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,21 +18,25 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/teams")
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:5173")
 public class TeamController {
 
     private final TeamServiceImpl teamService;
 
+    private final UserServiceImpl userService;
+
     private final ModelMapper modelMapper;
 
     @Autowired
-    public TeamController(TeamServiceImpl teamService, ModelMapper modelMapper) {
+    public TeamController(TeamServiceImpl teamService, UserServiceImpl userService, ModelMapper modelMapper) {
         this.teamService = teamService;
+        this.userService = userService;
         this.modelMapper = modelMapper;
     }
 
@@ -47,7 +54,7 @@ public class TeamController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid TeamDTO teamDTO, BindingResult bindingResult) throws TeamException {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid TeamDTO teamDTO, BindingResult bindingResult) throws TeamException, UserException {
 
         if (bindingResult.hasErrors()) {
             StringBuilder message = new StringBuilder();
@@ -59,14 +66,26 @@ public class TeamController {
             throw new TeamException(message.toString());
         }
 
-        teamService.save(convertToTeam(teamDTO));
+        List<User> users = new ArrayList<>(teamDTO.getUsers().size());
+        Team team = convertToTeam(teamDTO);
+        for (User user: teamDTO.getUsers()) {
+            User currentUser = userService.findById(user.getId());
+            currentUser.setTeam(team);
+            users.add(currentUser);
+        }
+        team.setUsers(users);
+        teamService.save(team);
+
+        for (User user: users) {
+            userService.update(user, user.getId());
+        }
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody @Valid TeamDTO teamDTO, @PathVariable("id") int id,
-                                             BindingResult bindingResult) throws TeamException {
+                                             BindingResult bindingResult) throws TeamException, UserException {
 
         if (bindingResult.hasErrors()) {
             StringBuilder message = new StringBuilder();
@@ -78,13 +97,40 @@ public class TeamController {
             throw new TeamException(message.toString());
         }
 
-        teamService.update(convertToTeam(teamDTO), id);
+        List<User> users = new ArrayList<>(teamDTO.getUsers().size());
+        Team team = teamService.findById(id);
+
+        for (User user: team.getUsers()) {
+            user.setTeam(null);
+            userService.update(user, user.getId());
+        }
+
+        for (User user: teamDTO.getUsers()) {
+            User currentUser = userService.findById(user.getId());
+            currentUser.setTeam(team);
+            users.add(currentUser);
+        }
+        team.setName(teamDTO.getName());
+        team.setUsers(users);
+
+        for (User user: users) {
+            userService.update(user, user.getId());
+        }
+
+        teamService.update(team, id);
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) throws TeamException {
+
+        Team team = teamService.findById(id);
+
+        for (User user: team.getUsers()) {
+            user.setTeam(null);
+            userService.update(user, user.getId());
+        }
 
         teamService.deleteById(id);
 

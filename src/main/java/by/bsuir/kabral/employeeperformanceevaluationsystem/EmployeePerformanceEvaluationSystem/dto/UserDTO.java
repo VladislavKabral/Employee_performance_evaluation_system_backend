@@ -10,6 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserDTO {
+
+    private int id;
     @NotEmpty(message = "Lastname must be not empty")
     @Size(min = 2, max = 20, message = "Lastname must be between 2 and 20 characters")
     private String lastname;
