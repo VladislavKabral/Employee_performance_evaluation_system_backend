@@ -8,6 +8,7 @@ import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEv
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.ErrorResponse;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.FormException;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.QuestionException;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.SkillException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class FormController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> create(@RequestBody @Valid FormDTO formDTO, BindingResult bindingResult) throws QuestionException, FormException {
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid FormDTO formDTO, BindingResult bindingResult) throws QuestionException, FormException, SkillException {
 
         if (bindingResult.hasErrors()) {
             StringBuilder message = new StringBuilder();
@@ -67,6 +68,11 @@ public class FormController {
         }
 
         List<Question> questions = formDTO.getQuestions();
+
+        for (Question question: questions) {
+            questionService.save(question);
+        }
+
         List<Question> questionsFromDB = new ArrayList<>(questions.size());
 
         for (Question question: questions) {
@@ -83,7 +89,7 @@ public class FormController {
 
     @PatchMapping("{id}")
     public ResponseEntity<HttpStatus> update(@RequestBody FormDTO formDTO, @PathVariable("id") int id,
-                                             BindingResult bindingResult) throws QuestionException, FormException {
+                                             BindingResult bindingResult) throws QuestionException, FormException, SkillException {
 
         if (bindingResult.hasErrors()) {
             StringBuilder message = new StringBuilder();
@@ -95,16 +101,18 @@ public class FormController {
             throw new FormException(message.toString());
         }
 
+        Form form = formService.findById(id);
+        form.setName(formDTO.getName());
+
         List<Question> questions = formDTO.getQuestions();
-        List<Question> questionsFromDB = new ArrayList<>(questions.size());
+        List<Question> formQuestions = new ArrayList<>(formDTO.getQuestions().size());
 
         for (Question question: questions) {
-            questionsFromDB.add(questionService.findByText(question.getText()));
+            questionService.update(question, question.getId());
+            formQuestions.add(questionService.findById(question.getId()));
         }
 
-        Form form = convertToForm(formDTO);
-        form.setQuestions(questionsFromDB);
-
+        form.setQuestions(formQuestions);
         formService.update(form, id);
 
         return ResponseEntity.ok(HttpStatus.OK);

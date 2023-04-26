@@ -9,9 +9,9 @@ public interface ServiceInterface<T> {
 
     T findById(int id) throws FeedbackException, FeedbackPackageException, FormException, ManagerException, QuestionException, SkillException, TeamException, UserException;
 
-    void save(T t);
+    void save(T t) throws SkillException;
 
-    void update(T t, int id);
+    void update(T t, int id) throws SkillException;
 
     void deleteById(int id);
 }
