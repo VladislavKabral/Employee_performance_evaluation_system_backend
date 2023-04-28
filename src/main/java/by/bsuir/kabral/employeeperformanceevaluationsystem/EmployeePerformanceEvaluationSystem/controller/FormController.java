@@ -103,16 +103,25 @@ public class FormController {
 
         Form form = formService.findById(id);
         form.setName(formDTO.getName());
+        for (Question question: form.getQuestions()) {
+            questionService.deleteById(question.getId());
+        }
+        form.setQuestions(null);
 
         List<Question> questions = formDTO.getQuestions();
-        List<Question> formQuestions = new ArrayList<>(formDTO.getQuestions().size());
 
         for (Question question: questions) {
-            questionService.update(question, question.getId());
-            formQuestions.add(questionService.findById(question.getId()));
+            questionService.save(question);
         }
 
-        form.setQuestions(formQuestions);
+        List<Question> questionsFromDB = new ArrayList<>(questions.size());
+
+        for (Question question: questions) {
+            questionsFromDB.add(questionService.findByText(question.getText()));
+        }
+
+
+        form.setQuestions(questionsFromDB);
         formService.update(form, id);
 
         return ResponseEntity.ok(HttpStatus.OK);

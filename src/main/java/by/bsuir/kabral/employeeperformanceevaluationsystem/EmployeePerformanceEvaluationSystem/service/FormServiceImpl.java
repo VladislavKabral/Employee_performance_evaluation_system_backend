@@ -1,6 +1,7 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service;
 
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Form;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Question;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.FormRepository;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.FormException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,12 @@ public class FormServiceImpl implements ServiceInterface<Form> {
 
     private final FormRepository formRepository;
 
+    private final QuestionServiceImpl questionService;
+
     @Autowired
-    public FormServiceImpl(FormRepository formRepository) {
+    public FormServiceImpl(FormRepository formRepository, QuestionServiceImpl questionService) {
         this.formRepository = formRepository;
+        this.questionService = questionService;
     }
 
     @Override
@@ -63,6 +67,14 @@ public class FormServiceImpl implements ServiceInterface<Form> {
     @Override
     @Transactional
     public void deleteById(int id) {
+        Optional<Form> form = formRepository.findById(id);
+
+        if (form.isPresent()) {
+            for (Question question: form.get().getQuestions()) {
+                questionService.deleteById(question.getId());
+            }
+        }
+
         formRepository.deleteById(id);
     }
 }
