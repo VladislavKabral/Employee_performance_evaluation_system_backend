@@ -33,6 +33,8 @@ public class UserDTO {
 
     private Manager manager;
 
+    private Team team;
+
     public UserDTO() {
     }
 }

@@ -17,7 +17,7 @@ public class FeedbackPackageDTO {
     private String name;
 
     private Boolean isPublic;
-
+	
     private Form form;
 
     private User targetUser;

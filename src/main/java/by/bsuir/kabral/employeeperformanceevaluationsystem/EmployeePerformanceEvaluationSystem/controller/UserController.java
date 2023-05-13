@@ -62,7 +62,7 @@ public class UserController {
         return convertToUserDTO(userService.findById(id));
     }
 
-    @GetMapping("/manager/{managerId}")
+    @GetMapping("/manager/{managerId}/users")
     public List<UserDTO> getManagerUsers(@PathVariable("managerId") int managerId) throws ManagerException {
         Manager manager = managerService.findById(managerId);
 
@@ -70,6 +70,13 @@ public class UserController {
                 .stream()
                 .map(this::convertToUserDTO)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/manager/{managerId}")
+    public UserDTO getManager(@PathVariable("managerId") int managerId) throws UserException {
+        User manager = userService.findById(managerId);
+
+        return convertToUserDTO(manager);
     }
 
     @PostMapping

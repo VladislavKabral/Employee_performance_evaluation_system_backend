@@ -60,7 +60,7 @@ public class FeedbackController {
         User user = userService.findById(userId);
 
         return user.getFeedbacks()
-                .stream()
+		        .stream()
                 .map(this::convertToFeedbackDTO)
                 .collect(Collectors.toList());
     }
