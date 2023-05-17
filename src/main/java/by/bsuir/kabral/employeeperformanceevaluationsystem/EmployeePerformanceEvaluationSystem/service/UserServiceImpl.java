@@ -63,6 +63,16 @@ public class UserServiceImpl implements ServiceInterface<User> {
         return user.get();
     }
 
+    public User findByEmail(String email) throws UserException {
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if (user.isEmpty()) {
+            throw new UserException("User not found");
+        }
+
+        return user.get();
+    }
+
     @Override
     @Transactional
     public void save(User user) {

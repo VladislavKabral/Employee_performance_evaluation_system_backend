@@ -1,14 +1,13 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.controller;
 
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.dto.UserDTO;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.dto.UserStatisticDTO;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Manager;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Position;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Salary;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.User;
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.ManagerServiceImpl;
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.PositionServiceImpl;
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.SalaryServiceImpl;
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.UserServiceImpl;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.statistic.UserStatistic;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.*;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.ErrorResponse;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.ManagerException;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.UserException;
@@ -40,13 +39,16 @@ public class UserController {
 
     private final ManagerServiceImpl managerService;
 
+    private final UserStatisticService userStatisticService;
+
     @Autowired
-    public UserController(UserServiceImpl userService, ModelMapper modelMapper, SalaryServiceImpl salaryService, PositionServiceImpl positionService, ManagerServiceImpl managerService) {
+    public UserController(UserServiceImpl userService, ModelMapper modelMapper, SalaryServiceImpl salaryService, PositionServiceImpl positionService, ManagerServiceImpl managerService, UserStatisticService userStatisticService) {
         this.userService = userService;
         this.modelMapper = modelMapper;
         this.salaryService = salaryService;
         this.positionService = positionService;
         this.managerService = managerService;
+        this.userStatisticService = userStatisticService;
     }
 
     @GetMapping
@@ -77,6 +79,15 @@ public class UserController {
         User manager = userService.findById(managerId);
 
         return convertToUserDTO(manager);
+    }
+
+    @GetMapping("/{id}/statistic")
+    public UserStatisticDTO getUserStatistic(@PathVariable("id") int id) throws UserException {
+        User user = userService.findById(id);
+
+        UserStatistic userStatistic = userStatisticService.generateUserStatistic(user);
+
+        return convertToUserStatisticDTO(userStatistic);
     }
 
     @PostMapping
@@ -155,5 +166,9 @@ public class UserController {
 
     private UserDTO convertToUserDTO(User user) {
         return modelMapper.map(user, UserDTO.class);
+    }
+
+    private UserStatisticDTO convertToUserStatisticDTO(UserStatistic userStatistic) {
+        return modelMapper.map(userStatistic, UserStatisticDTO.class);
     }
 }

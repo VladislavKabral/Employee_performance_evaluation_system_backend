@@ -64,7 +64,7 @@ public class ReportService {
         return averageFeedbacksMarks;
     }
 
-    private double calculateAverageMark(List<Feedback> feedbacks) {
+    public double calculateAverageMark(List<Feedback> feedbacks) {
         double averageFeedbackMark = 0.0;
 
         List<Double> averageFeedbacksMarks = calculateAverageFeedbacksMarks(feedbacks);
@@ -78,15 +78,15 @@ public class ReportService {
         return averageFeedbackMark;
     }
 
-    private double calculateBestAverageFeedbackMark(List<Feedback> feedbacks) {
+    public double calculateBestAverageFeedbackMark(List<Feedback> feedbacks) {
         return Collections.max(calculateAverageFeedbacksMarks(feedbacks));
     }
 
-    private double calculateWorstAverageFeedbackMark(List<Feedback> feedbacks) {
+    public double calculateWorstAverageFeedbackMark(List<Feedback> feedbacks) {
         return Collections.min(calculateAverageFeedbacksMarks(feedbacks));
     }
 
-    private User findBestFeedbackEmployee(List<Feedback> feedbacks) {
+    public User findBestFeedbackEmployee(List<Feedback> feedbacks) {
         User employee = new User();
 
         double bestAverageFeedbackMark = calculateBestAverageFeedbackMark(feedbacks);
@@ -100,7 +100,7 @@ public class ReportService {
         return employee;
     }
 
-    private User findWorstFeedbackEmployee(List<Feedback> feedbacks) {
+    public User findWorstFeedbackEmployee(List<Feedback> feedbacks) {
         User employee = new User();
 
         double worstAverageFeedbackMark = calculateWorstAverageFeedbackMark(feedbacks);
@@ -132,7 +132,7 @@ public class ReportService {
         return skillRates;
     }
 
-    private Skill calculateBestSkill(List<Feedback> feedbacks) {
+    public Skill calculateBestSkill(List<Feedback> feedbacks) {
         Skill skill = new Skill();
         Map<Skill, Double> skillRates = calculateSkillRates(feedbacks);
 
@@ -148,7 +148,7 @@ public class ReportService {
         return skill;
     }
 
-    private Skill calculateWorstSkill(List<Feedback> feedbacks) {
+    public Skill calculateWorstSkill(List<Feedback> feedbacks) {
         Skill skill;
 
         Map<Skill, Double> skillRates = calculateSkillRates(feedbacks);

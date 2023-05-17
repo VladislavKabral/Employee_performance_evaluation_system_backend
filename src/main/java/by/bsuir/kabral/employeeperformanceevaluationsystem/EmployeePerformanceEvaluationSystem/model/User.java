@@ -68,6 +68,11 @@ public class User {
     @JsonBackReference(value = "user_status")
     private UserStatus status;
 
+    @ManyToOne
+    @JoinColumn(name = "user_role_id", referencedColumnName = "user_role_id")
+    @JsonBackReference(value = "user_role")
+    private UserRole role;
+
     @OneToMany(mappedBy = "sourceUser")
     @JsonManagedReference(value = "user_feedback")
     private List<Feedback> feedbacks;
