@@ -21,7 +21,9 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -87,7 +89,25 @@ public class UserController {
 
         UserStatistic userStatistic = userStatisticService.generateUserStatistic(user);
 
-        return convertToUserStatisticDTO(userStatistic);
+        UserStatisticDTO userStatisticDTO = new UserStatisticDTO();
+        userStatisticDTO.setAverageFeedbackMark(userStatistic.getAverageFeedbackMark());
+        userStatisticDTO.setBestAverageFeedbackMark(userStatistic.getBestAverageFeedbackMark());
+        userStatisticDTO.setWorstAverageFeedbackMark(userStatistic.getWorstAverageFeedbackMark());
+        userStatisticDTO.setBestSkill(userStatistic.getBestSkill());
+        userStatisticDTO.setWorstSkill(userStatistic.getWorstSkill());
+        userStatisticDTO.setBestFeedbackEmployee(userStatistic.getBestFeedbackEmployee());
+        userStatisticDTO.setWorstFeedbackEmployee(userStatistic.getWorstFeedbackEmployee());
+
+        List<Integer> marks = new ArrayList<>();
+        Map<Double, Integer> distributionOfMarks = userStatistic.getDistributionOfMarks();
+
+        for (int i = 0; i <= 10; i++) {
+            marks.add(distributionOfMarks.get((double) i));
+        }
+
+        userStatisticDTO.setDistributionOfMarks(marks);
+
+        return userStatisticDTO;
     }
 
     @PostMapping
@@ -166,9 +186,5 @@ public class UserController {
 
     private UserDTO convertToUserDTO(User user) {
         return modelMapper.map(user, UserDTO.class);
-    }
-
-    private UserStatisticDTO convertToUserStatisticDTO(UserStatistic userStatistic) {
-        return modelMapper.map(userStatistic, UserStatisticDTO.class);
     }
 }
