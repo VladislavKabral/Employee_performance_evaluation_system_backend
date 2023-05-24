@@ -101,7 +101,7 @@ public class UserController {
         List<Integer> marks = new ArrayList<>();
         Map<Double, Integer> distributionOfMarks = userStatistic.getDistributionOfMarks();
 
-        for (int i = 0; i <= 10; i++) {
+        for (int i = 1; i <= 10; i++) {
             marks.add(distributionOfMarks.get((double) i));
         }
 

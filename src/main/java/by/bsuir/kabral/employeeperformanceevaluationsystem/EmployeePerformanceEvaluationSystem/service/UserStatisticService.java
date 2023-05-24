@@ -23,7 +23,7 @@ public class UserStatisticService {
         this.reportService = reportService;
     }
 
-    private List<Feedback> findCompletedFeedbacks(List<FeedbackPackage> packages) {
+    public List<Feedback> findCompletedFeedbacks(List<FeedbackPackage> packages) {
         List<Feedback> feedbacks = new ArrayList<>();
 
         for (FeedbackPackage feedbackPackage: packages) {
@@ -38,7 +38,7 @@ public class UserStatisticService {
         return feedbacks;
     }
 
-    private Map<Double, Integer> generateDistributionOfMarks(List<Feedback> feedbacks) {
+    public Map<Double, Integer> generateDistributionOfMarks(List<Feedback> feedbacks) {
         Map<Double, Integer> distributionOfMarks = initializeDistributionOfMarksMap();
 
         for (Feedback feedback: feedbacks) {
@@ -51,7 +51,7 @@ public class UserStatisticService {
         return distributionOfMarks;
     }
 
-    private Map<Double, Integer> initializeDistributionOfMarksMap() {
+    public Map<Double, Integer> initializeDistributionOfMarksMap() {
         Map<Double, Integer> distributionOfMarks = new HashMap<>();
 
         for (int i = MIN_RATE; i <= MAX_RATE; i++) {
@@ -73,7 +73,6 @@ public class UserStatisticService {
         User bestFeedbackEmployee = reportService.findBestFeedbackEmployee(feedbacks);
         User worstFeedbackEmployee = reportService.findWorstFeedbackEmployee(feedbacks);
         Map<Double, Integer> distributionOfMarks = generateDistributionOfMarks(feedbacks);
-        System.out.println(distributionOfMarks);
 
         userStatistic.setAverageFeedbackMark(averageFeedbackMark);
         userStatistic.setBestAverageFeedbackMark(bestAverageFeedbackMark);

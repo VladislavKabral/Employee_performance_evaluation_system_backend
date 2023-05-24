@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Map;
+import java.util.List;
 
 @Getter
 @Setter
@@ -29,5 +29,5 @@ public class TeamStatisticDTO {
 
     private User worstEmployee;
 
-    private Map<Double, Integer> distributionOfMarks;
+    private List<Integer> distributionOfMarks;
 }

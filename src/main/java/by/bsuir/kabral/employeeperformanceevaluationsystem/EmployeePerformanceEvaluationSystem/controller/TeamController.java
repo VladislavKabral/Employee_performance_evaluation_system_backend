@@ -1,9 +1,12 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.controller;
 
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.dto.TeamDTO;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.dto.TeamStatisticDTO;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Team;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.User;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.statistic.TeamStatistic;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.TeamServiceImpl;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.TeamStatisticService;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.UserServiceImpl;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.ErrorResponse;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.TeamException;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -33,11 +37,14 @@ public class TeamController {
 
     private final ModelMapper modelMapper;
 
+    private final TeamStatisticService teamStatisticService;
+
     @Autowired
-    public TeamController(TeamServiceImpl teamService, UserServiceImpl userService, ModelMapper modelMapper) {
+    public TeamController(TeamServiceImpl teamService, UserServiceImpl userService, ModelMapper modelMapper, TeamStatisticService teamStatisticService) {
         this.teamService = teamService;
         this.userService = userService;
         this.modelMapper = modelMapper;
+        this.teamStatisticService = teamStatisticService;
     }
 
     @GetMapping
@@ -49,8 +56,35 @@ public class TeamController {
     }
 
     @GetMapping("/{id}")
-    public TeamDTO  getTeam(@PathVariable("id") int id) throws TeamException {
+    public TeamDTO getTeam(@PathVariable("id") int id) throws TeamException {
         return convertToTeamDTO(teamService.findById(id));
+    }
+
+    @GetMapping("/{id}/statistic")
+    public TeamStatisticDTO getTeamStatistic(@PathVariable("id") int id) throws TeamException {
+        Team team = teamService.findById(id);
+
+        TeamStatistic teamStatistic = teamStatisticService.generateTeamStatistic(team);
+
+        TeamStatisticDTO teamStatisticDTO = new TeamStatisticDTO();
+        teamStatisticDTO.setAverageFeedbackMark(teamStatistic.getAverageFeedbackMark());
+        teamStatisticDTO.setBestAverageFeedbackMark(teamStatistic.getBestAverageFeedbackMark());
+        teamStatisticDTO.setWorstAverageFeedbackMark(teamStatistic.getWorstAverageFeedbackMark());
+        teamStatisticDTO.setBestSkill(teamStatistic.getBestSkill());
+        teamStatisticDTO.setWorstSkill(teamStatistic.getWorstSkill());
+        teamStatisticDTO.setBestEmployee(teamStatistic.getBestEmployee());
+        teamStatisticDTO.setWorstEmployee(teamStatistic.getWorstEmployee());
+
+        List<Integer> marks = new ArrayList<>();
+        Map<Double, Integer> distributionOfMarks = teamStatistic.getDistributionOfMarks();
+
+        for (int i = 1; i <= 10; i++) {
+            marks.add(distributionOfMarks.get((double) i));
+        }
+
+        teamStatisticDTO.setDistributionOfMarks(marks);
+
+        return teamStatisticDTO;
     }
 
     @PostMapping

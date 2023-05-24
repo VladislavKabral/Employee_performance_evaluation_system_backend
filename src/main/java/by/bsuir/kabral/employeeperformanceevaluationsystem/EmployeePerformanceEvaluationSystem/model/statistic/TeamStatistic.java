@@ -30,10 +30,4 @@ public class TeamStatistic {
     private User worstEmployee;
 
     private Map<Double, Integer> distributionOfMarks;
-
-    public TeamStatistic() {
-        for (int i = MIN_RATE; i <= MAX_RATE; i++) {
-            distributionOfMarks.put((double) i, 0);
-        }
-    }
 }
