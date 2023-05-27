@@ -1,7 +1,7 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
+import javax.persistence.*;
+import javax.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 

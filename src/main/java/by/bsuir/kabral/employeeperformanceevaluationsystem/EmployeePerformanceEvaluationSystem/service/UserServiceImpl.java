@@ -1,5 +1,6 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service;
 
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Position;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.User;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.UserStatus;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.UserRepository;
@@ -19,12 +20,17 @@ public class UserServiceImpl implements ServiceInterface<User> {
 
     private final UserStatusServiceImpl userStatusService;
 
+    private final PositionServiceImpl positionService;
+
     private static final String USER_STATUS_ACTIVE = "ACTIVE";
 
+    private static final String USER_DEFAULT_POSITION = "Worker";
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserStatusServiceImpl userStatusService) {
+    public UserServiceImpl(UserRepository userRepository, UserStatusServiceImpl userStatusService, PositionServiceImpl positionService) {
         this.userRepository = userRepository;
         this.userStatusService = userStatusService;
+        this.positionService = positionService;
     }
 
     @Override
@@ -77,6 +83,8 @@ public class UserServiceImpl implements ServiceInterface<User> {
     @Transactional
     public void save(User user) {
         UserStatus userStatus = userStatusService.findByName(USER_STATUS_ACTIVE);
+        Position position = positionService.findByName(USER_DEFAULT_POSITION);
+        user.setPosition(position);
         user.setStatus(userStatus);
         userRepository.save(user);
     }

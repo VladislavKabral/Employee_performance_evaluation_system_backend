@@ -1,6 +1,6 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.dto;
 
-import jakarta.validation.constraints.Min;
+import javax.validation.constraints.Min;
 import lombok.Getter;
 import lombok.Setter;
 
