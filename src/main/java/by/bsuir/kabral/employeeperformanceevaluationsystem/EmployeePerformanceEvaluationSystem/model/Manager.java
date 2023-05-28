@@ -5,13 +5,14 @@ import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "Managers")
 @Getter
 @Setter
-public class Manager {
+public class Manager implements Serializable {
 
     @Id
     @Column(name = "manager_id")
