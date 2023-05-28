@@ -1,18 +1,17 @@
-package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.security;
+package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service;
 
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.User;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.UserRepository;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.security.EmployeesDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.Optional;
 
-@Component
+@Service
 public class EmployeesDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -25,12 +24,12 @@ public class EmployeesDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> userRes = userRepository.findByEmail(email);
-        if(userRes.isEmpty())
-            throw new UsernameNotFoundException("Could not findUser with email = " + email);
+
+        if (userRes.isEmpty()) {
+            throw new UsernameNotFoundException("Could not find employee with email = " + email);
+        }
+
         User user = userRes.get();
-        return new org.springframework.security.core.userdetails.User(
-                email,
-                user.getHashPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getName())));
+        return new EmployeesDetails(user);
     }
 }

@@ -8,9 +8,8 @@ import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEv
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -27,23 +26,21 @@ public class AuthController {
 
     private final AuthenticationManager authManager;
 
-    private final PasswordEncoder passwordEncoder;
-
     private final ModelMapper modelMapper;
 
     @Autowired
-    public AuthController(UserServiceImpl userService, JWTUtil jwtUtil, AuthenticationManager authManager, PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
+    public AuthController(UserServiceImpl userService,
+                          JWTUtil jwtUtil,
+                          AuthenticationManager authManager,
+                          ModelMapper modelMapper) {
         this.userService = userService;
         this.jwtUtil = jwtUtil;
         this.authManager = authManager;
-        this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
     }
 
     @PostMapping("/register")
     public Map<String, Object> registerHandler(@RequestBody UserDTO userDTO) {
-        String encodedPass = passwordEncoder.encode(userDTO.getHashPassword());
-        userDTO.setHashPassword(encodedPass);
         userService.save(convertToUser(userDTO));
         String token = jwtUtil.generateToken(userDTO.getEmail());
         return Collections.singletonMap("jwt-token", token);
@@ -63,11 +60,12 @@ public class AuthController {
 
             authManager.authenticate(authInputToken);
 
-            String token = jwtUtil.generateToken(body.getEmail());
-
-            return Collections.singletonMap("jwt-token", token);
-        } catch (AuthenticationException authExc){
-            throw new RuntimeException("Invalid Login Credentials");
+        } catch (BadCredentialsException e){
+            return Map.of("message", "Incorrect credentials!");
         }
+
+        String token = jwtUtil.generateToken(body.getEmail());
+
+        return Collections.singletonMap("jwt-token", token);
     }
 }
