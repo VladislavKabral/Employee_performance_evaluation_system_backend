@@ -1,9 +1,6 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service;
 
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Position;
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.User;
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.UserRole;
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.UserStatus;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.*;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.UserRepository;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +23,8 @@ public class UserServiceImpl implements ServiceInterface<User> {
 
     private final UserRoleService userRoleService;
 
+    private final SalaryServiceImpl salaryService;
+
     private final PasswordEncoder passwordEncoder;
 
     private static final String USER_STATUS_ACTIVE = "ACTIVE";
@@ -34,12 +33,15 @@ public class UserServiceImpl implements ServiceInterface<User> {
 
     private static final String USER_ROLE_WORKER = "WORKER";
 
+    private static final int EMPLOYEE_MIN_SALARY_VALUE = 400;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserStatusServiceImpl userStatusService, PositionServiceImpl positionService, UserRoleService userRoleService, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, UserStatusServiceImpl userStatusService, PositionServiceImpl positionService, UserRoleService userRoleService, SalaryServiceImpl salaryService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userStatusService = userStatusService;
         this.positionService = positionService;
         this.userRoleService = userRoleService;
+        this.salaryService = salaryService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -95,8 +97,10 @@ public class UserServiceImpl implements ServiceInterface<User> {
         UserStatus userStatus = userStatusService.findByName(USER_STATUS_ACTIVE);
         Position position = positionService.findByName(USER_DEFAULT_POSITION);
         UserRole userRole = userRoleService.findByName(USER_ROLE_WORKER);
+        Salary salary = salaryService.findByValue(String.valueOf(EMPLOYEE_MIN_SALARY_VALUE));
         user.setRole(userRole);
         user.setPosition(position);
+        user.setSalary(salary);
         user.setStatus(userStatus);
         user.setHashPassword(passwordEncoder.encode(user.getHashPassword()));
         userRepository.save(user);
