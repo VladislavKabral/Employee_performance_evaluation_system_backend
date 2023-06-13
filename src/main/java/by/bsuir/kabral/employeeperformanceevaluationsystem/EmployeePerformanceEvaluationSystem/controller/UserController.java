@@ -2,14 +2,12 @@ package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceE
 
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.dto.UserDTO;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.dto.UserStatisticDTO;
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Manager;
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Position;
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Salary;
-import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.User;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.*;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.statistic.UserStatistic;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service.*;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.ErrorResponse;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.ManagerException;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.TeamException;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.UserException;
 import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -43,14 +41,17 @@ public class UserController {
 
     private final UserStatisticService userStatisticService;
 
+    private final TeamServiceImpl teamService;
+
     @Autowired
-    public UserController(UserServiceImpl userService, ModelMapper modelMapper, SalaryServiceImpl salaryService, PositionServiceImpl positionService, ManagerServiceImpl managerService, UserStatisticService userStatisticService) {
+    public UserController(UserServiceImpl userService, ModelMapper modelMapper, SalaryServiceImpl salaryService, PositionServiceImpl positionService, ManagerServiceImpl managerService, UserStatisticService userStatisticService, TeamServiceImpl teamService) {
         this.userService = userService;
         this.modelMapper = modelMapper;
         this.salaryService = salaryService;
         this.positionService = positionService;
         this.managerService = managerService;
         this.userStatisticService = userStatisticService;
+        this.teamService = teamService;
     }
 
     @GetMapping
@@ -76,7 +77,7 @@ public class UserController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/manager/{managerId}")
+    @GetMapping("/managers/{managerId}")
     public UserDTO getManager(@PathVariable("managerId") int managerId) throws UserException {
         User manager = userService.findById(managerId);
 
@@ -159,6 +160,27 @@ public class UserController {
         user.setSalary(salary);
         user.setPosition(position);
         user.setManager(manager);
+
+        userService.update(user, id);
+
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/edit")
+    public ResponseEntity<HttpStatus> edit(@PathVariable("id") int id, @RequestBody UserDTO userDTO)
+            throws UserException, TeamException {
+
+        User user = userService.findById(id);
+
+        if (userDTO.getSalary() != null) {
+            Salary salary = salaryService.findByValue(userDTO.getSalary().getValue());
+            user.setSalary(salary);
+        }
+
+        if (userDTO.getTeam() != null) {
+            Team team = teamService.findByName(userDTO.getTeam().getName());
+            user.setTeam(team);
+        }
 
         userService.update(user, id);
 
