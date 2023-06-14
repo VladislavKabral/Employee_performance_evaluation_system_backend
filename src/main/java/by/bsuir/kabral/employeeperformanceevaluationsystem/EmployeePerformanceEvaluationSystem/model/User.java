@@ -59,7 +59,7 @@ public class User {
     private String hashPassword;
 
     @ManyToOne
-    @JoinColumn(name = "user_manager_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "user_manager_id", referencedColumnName = "manager_id")
     @JsonBackReference(value = "manager_user")
     private Manager manager;
 

@@ -168,7 +168,7 @@ public class UserController {
 
     @PatchMapping("/{id}/edit")
     public ResponseEntity<HttpStatus> edit(@PathVariable("id") int id, @RequestBody UserDTO userDTO)
-            throws UserException, TeamException {
+            throws UserException, TeamException, ManagerException {
 
         User user = userService.findById(id);
 
@@ -180,6 +180,11 @@ public class UserController {
         if (userDTO.getTeam() != null) {
             Team team = teamService.findByName(userDTO.getTeam().getName());
             user.setTeam(team);
+        }
+
+        if (userDTO.getManager() != null) {
+            Manager manager = managerService.findById(userDTO.getManager().getId());
+            user.setManager(manager);
         }
 
         userService.update(user, id);
