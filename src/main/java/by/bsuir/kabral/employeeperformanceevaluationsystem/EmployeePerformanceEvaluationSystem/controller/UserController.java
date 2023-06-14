@@ -1,5 +1,6 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.controller;
 
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.dto.ManagerDTO;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.dto.UserDTO;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.dto.UserStatisticDTO;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.*;
@@ -75,6 +76,24 @@ public class UserController {
                 .stream()
                 .map(this::convertToUserDTO)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/managers")
+    public List<ManagerDTO> getManagers() throws UserException {
+        List<Manager> managers = managerService.findAll();
+
+        List<ManagerDTO> managerDTOS = new ArrayList<>(managers.size());
+
+        for (Manager manager: managers) {
+            ManagerDTO managerDTO = new ManagerDTO();
+            User user = userService.findById(manager.getUserId());
+            managerDTO.setId(manager.getId());
+            managerDTO.setLastname(user.getLastname());
+            managerDTO.setFirstname(user.getFirstname());
+            managerDTOS.add(managerDTO);
+        }
+
+        return managerDTOS;
     }
 
     @GetMapping("/managers/{managerId}")
