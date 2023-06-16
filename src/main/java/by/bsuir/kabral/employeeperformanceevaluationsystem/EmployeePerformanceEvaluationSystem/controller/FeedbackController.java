@@ -17,6 +17,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,6 +72,20 @@ public class FeedbackController {
 
         return feedbackPackage.getFeedbacks()
                 .stream()
+                .map(this::convertToFeedbackDTO)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{userId}/feedbacks")
+    public List<FeedbackDTO> getUsersFeedbacks(@PathVariable("userId") int userId) throws UserException {
+        User user = userService.findById(userId);
+
+        List<Feedback> feedbacks = new ArrayList<>();
+        for (FeedbackPackage feedbackPackage: user.getPackages()) {
+            feedbacks.addAll(feedbackPackage.getFeedbacks());
+        }
+
+        return feedbacks.stream()
                 .map(this::convertToFeedbackDTO)
                 .collect(Collectors.toList());
     }
