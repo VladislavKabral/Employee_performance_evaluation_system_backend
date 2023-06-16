@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,6 +38,8 @@ public class FeedbackController {
     private final ResponseServiceImpl responseService;
 
     private final UserServiceImpl userService;
+
+    private static final String FEEDBACK_STATUS_COMPLETED = "COMPLETED";
 
     @Autowired
     public FeedbackController(FeedbackServiceImpl feedbackService, ModelMapper modelMapper, QuestionServiceImpl questionService, FeedbackPackageServiceImpl feedbackPackageService, ResponseServiceImpl responseService, UserServiceImpl userService) {
@@ -85,7 +88,11 @@ public class FeedbackController {
             feedbacks.addAll(feedbackPackage.getFeedbacks());
         }
 
-        return feedbacks.stream()
+        List<Feedback> completedFeedbacks = feedbacks.stream()
+                .filter(feedback -> Objects.equals(feedback.getStatus().getName(), FEEDBACK_STATUS_COMPLETED))
+                .toList();
+
+        return completedFeedbacks.stream()
                 .map(this::convertToFeedbackDTO)
                 .collect(Collectors.toList());
     }
