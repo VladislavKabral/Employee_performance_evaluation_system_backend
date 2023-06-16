@@ -1,6 +1,7 @@
 package by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.service;
 
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.Team;
+import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.model.User;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.TeamRepository;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.TeamException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,12 @@ public class TeamServiceImpl implements ServiceInterface<Team> {
 
     private final TeamRepository teamRepository;
 
+    private final UserServiceImpl userService;
+
     @Autowired
-    public TeamServiceImpl(TeamRepository teamRepository) {
+    public TeamServiceImpl(TeamRepository teamRepository, UserServiceImpl userService) {
         this.teamRepository = teamRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -63,6 +67,18 @@ public class TeamServiceImpl implements ServiceInterface<Team> {
     @Override
     @Transactional
     public void deleteById(int id) {
+        Optional<Team> team = teamRepository.findById(id);
+
+        if (team.isPresent()) {
+            for (User user: team.get().getUsers()) {
+                user.setTeam(null);
+                userService.update(user, user.getId());
+            }
+            team.get().setUsers(null);
+            save(team.get());
+        }
+
+
         teamRepository.deleteById(id);
     }
 }

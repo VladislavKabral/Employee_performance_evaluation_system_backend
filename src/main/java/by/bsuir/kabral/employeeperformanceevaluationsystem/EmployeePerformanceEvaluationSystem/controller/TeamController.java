@@ -157,14 +157,7 @@ public class TeamController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) throws TeamException {
-
-        Team team = teamService.findById(id);
-
-        for (User user: team.getUsers()) {
-            user.setTeam(null);
-            userService.update(user, user.getId());
-        }
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
 
         teamService.deleteById(id);
 

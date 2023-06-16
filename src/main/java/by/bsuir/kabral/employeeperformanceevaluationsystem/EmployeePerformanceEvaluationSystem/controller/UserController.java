@@ -57,7 +57,8 @@ public class UserController {
 
     @GetMapping
     public List<UserDTO> getUsers() {
-        return userService.findAll()
+
+        return userService.getActiveUsers()
                 .stream()
                 .map(this::convertToUserDTO)
                 .collect(Collectors.toList());
@@ -207,6 +208,15 @@ public class UserController {
         }
 
         userService.update(user, id);
+
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/retire")
+    public ResponseEntity<HttpStatus> retire(@PathVariable("id") int id) throws UserException {
+        User user = userService.findById(id);
+
+        userService.retire(user, id);
 
         return ResponseEntity.ok(HttpStatus.OK);
     }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -28,6 +29,8 @@ public class UserServiceImpl implements ServiceInterface<User> {
     private final PasswordEncoder passwordEncoder;
 
     private static final String USER_STATUS_ACTIVE = "ACTIVE";
+
+    private static final String USER_STATUS_RETIRED = "RETIRED";
 
     private static final String USER_DEFAULT_POSITION = "Worker";
 
@@ -113,9 +116,26 @@ public class UserServiceImpl implements ServiceInterface<User> {
         userRepository.save(user);
     }
 
+    @Transactional
+    public void retire(User user, int id) {
+        UserStatus userStatus = userStatusService.findByName(USER_STATUS_RETIRED);
+        user.setStatus(userStatus);
+        user.setTeam(null);
+        user.setManager(null);
+        user.setId(id);
+        userRepository.save(user);
+    }
+
     @Override
     @Transactional
     public void deleteById(int id) {
         userRepository.deleteById(id);
+    }
+
+    public List<User> getActiveUsers() {
+        return findAll()
+                .stream()
+                .filter(user -> Objects.equals(user.getStatus().getName(), USER_STATUS_ACTIVE))
+                .toList();
     }
 }
