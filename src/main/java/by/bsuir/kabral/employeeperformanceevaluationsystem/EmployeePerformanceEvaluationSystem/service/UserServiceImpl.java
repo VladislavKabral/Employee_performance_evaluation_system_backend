@@ -94,6 +94,10 @@ public class UserServiceImpl implements ServiceInterface<User> {
         return user.get();
     }
 
+    public List<User> findByLastnameStartingWith(String lastname) {
+        return userRepository.findByLastnameStartingWithIgnoreCase(lastname);
+    }
+
     @Override
     @Transactional
     public void save(User user) {

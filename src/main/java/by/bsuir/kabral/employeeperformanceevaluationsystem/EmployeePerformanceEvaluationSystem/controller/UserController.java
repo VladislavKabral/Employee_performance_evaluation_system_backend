@@ -69,6 +69,14 @@ public class UserController {
         return convertToUserDTO(userService.findById(id));
     }
 
+    @GetMapping("/search")
+    public List<UserDTO> searchUsers(@RequestBody UserDTO userDTO) {
+        return userService.findByLastnameStartingWith(userDTO.getLastname())
+                .stream()
+                .map(this::convertToUserDTO)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping("/manager/{userId}/users")
     public List<UserDTO> getManagerUsers(@PathVariable("userId") int userId) throws ManagerException {
         Manager manager = managerService.findByUserId(userId);
