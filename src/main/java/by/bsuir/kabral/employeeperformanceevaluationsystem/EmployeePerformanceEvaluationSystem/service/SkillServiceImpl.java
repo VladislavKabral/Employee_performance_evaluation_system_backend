@@ -4,6 +4,7 @@ import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEv
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.SkillRepository;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.SkillException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,8 @@ public class SkillServiceImpl implements ServiceInterface<Skill> {
 
     private final SkillRepository skillRepository;
 
+    private static final int COUNT_OF_SKILLS_ON_PAGE = 10;
+
     @Autowired
     public SkillServiceImpl(SkillRepository skillRepository) {
         this.skillRepository = skillRepository;
@@ -24,6 +27,10 @@ public class SkillServiceImpl implements ServiceInterface<Skill> {
     @Override
     public List<Skill> findAll() {
         return skillRepository.findAll();
+    }
+
+    public List<Skill> findSkillsByPage(int indexOfPage) {
+        return skillRepository.findAll(PageRequest.of(indexOfPage, COUNT_OF_SKILLS_ON_PAGE)).getContent();
     }
 
     @Override

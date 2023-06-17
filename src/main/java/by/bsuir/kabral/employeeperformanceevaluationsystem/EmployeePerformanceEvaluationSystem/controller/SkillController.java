@@ -41,6 +41,14 @@ public class SkillController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("page/{indexOfPage}")
+    public List<SkillDTO> getSKillsByPage(@PathVariable("indexOfPage") int indexOfPage) {
+        return skillService.findSkillsByPage(indexOfPage)
+                .stream()
+                .map(this::convertToSkillDTO)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping("/{id}")
     public SkillDTO getSkill(@PathVariable("id") int id) throws SkillException {
         return convertToSkillDTO(skillService.findById(id));

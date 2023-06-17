@@ -4,6 +4,7 @@ import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEv
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.FeedbackPackageRepository;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.FeedbackPackageException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,8 @@ public class FeedbackPackageServiceImpl implements ServiceInterface<FeedbackPack
 
     private final FeedbackPackageRepository feedbackPackageRepository;
 
+    private static final int COUNT_OF_FEEDBACK_PACKAGES_ON_PAGE = 10;
+
     @Autowired
     public FeedbackPackageServiceImpl(FeedbackPackageRepository feedbackPackageRepository) {
         this.feedbackPackageRepository = feedbackPackageRepository;
@@ -24,6 +27,11 @@ public class FeedbackPackageServiceImpl implements ServiceInterface<FeedbackPack
 
     public List<FeedbackPackage> findAll() {
         return feedbackPackageRepository.findAll();
+    }
+
+    public List<FeedbackPackage> findFeedbackPackagesByPage(int indexOfPage) {
+        return feedbackPackageRepository.findAll(PageRequest.of(indexOfPage, COUNT_OF_FEEDBACK_PACKAGES_ON_PAGE))
+                .getContent();
     }
 
     public FeedbackPackage findById(int id) throws FeedbackPackageException {

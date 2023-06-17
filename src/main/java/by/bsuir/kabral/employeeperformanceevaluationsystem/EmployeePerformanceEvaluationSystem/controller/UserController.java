@@ -64,12 +64,20 @@ public class UserController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("page/{indexOfPage}")
+    public List<UserDTO> getUsersByPage(@PathVariable("indexOfPage") int indexOfPage) {
+        return userService.findUserByPage(indexOfPage)
+                .stream()
+                .map(this::convertToUserDTO)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping("/{id}")
     public UserDTO getUser(@PathVariable("id") int id) throws UserException {
         return convertToUserDTO(userService.findById(id));
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public List<UserDTO> searchUsers(@RequestBody UserDTO userDTO) {
         return userService.findByLastnameStartingWith(userDTO.getLastname())
                 .stream()

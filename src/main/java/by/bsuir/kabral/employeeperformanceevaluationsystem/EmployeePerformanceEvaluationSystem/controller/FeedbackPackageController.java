@@ -60,6 +60,14 @@ public class FeedbackPackageController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("page/{indexOfPage}")
+    public List<FeedbackPackageDTO> getPackagesByPage(@PathVariable("indexOfPage") int indexOfPage) {
+        return feedbackPackageService.findFeedbackPackagesByPage(indexOfPage)
+                .stream()
+                .map(this::convertToFeedbackPackageDTO)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping("/{id}")
     public FeedbackPackageDTO getPackage(@PathVariable("id") int id) throws FeedbackPackageException {
         return convertToFeedbackPackageDTO(feedbackPackageService.findById(id));

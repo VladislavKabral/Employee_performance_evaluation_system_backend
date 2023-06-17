@@ -59,6 +59,14 @@ public class FeedbackController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("page/{indexOfPage}")
+    public List<FeedbackDTO> getFeedbacksByPage(@PathVariable("indexOfPage") int indexOfPage) {
+        return feedbackService.findFeedbacksByPage(indexOfPage)
+                .stream()
+                .map(this::convertToFeedbackDTO)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping("/user/{userId}")
     public List<FeedbackDTO> getUserFeedbacks(@PathVariable("userId") int userId) throws UserException {
         User user = userService.findById(userId);

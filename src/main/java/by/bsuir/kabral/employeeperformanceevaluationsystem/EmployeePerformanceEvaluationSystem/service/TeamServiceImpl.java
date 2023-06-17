@@ -5,6 +5,7 @@ import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEv
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.TeamRepository;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.TeamException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,8 @@ public class TeamServiceImpl implements ServiceInterface<Team> {
 
     private final UserServiceImpl userService;
 
+    private static final int COUNT_OF_TEAMS_ON_PAGE = 10;
+
     @Autowired
     public TeamServiceImpl(TeamRepository teamRepository, UserServiceImpl userService) {
         this.teamRepository = teamRepository;
@@ -28,6 +31,10 @@ public class TeamServiceImpl implements ServiceInterface<Team> {
     @Override
     public List<Team> findAll() {
         return teamRepository.findAll();
+    }
+
+    public List<Team> findTeamsByPage(int indexOfPage) {
+        return teamRepository.findAll(PageRequest.of(indexOfPage, COUNT_OF_TEAMS_ON_PAGE)).getContent();
     }
 
     @Override

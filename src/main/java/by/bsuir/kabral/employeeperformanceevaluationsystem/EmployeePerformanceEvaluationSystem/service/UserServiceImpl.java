@@ -4,6 +4,8 @@ import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEv
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.UserRepository;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +39,8 @@ public class UserServiceImpl implements ServiceInterface<User> {
     private static final String USER_ROLE_WORKER = "WORKER";
 
     private static final int EMPLOYEE_MIN_SALARY_VALUE = 400;
+
+    private static final int COUNT_OF_USERS_ON_PAGE = 10;
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository, UserStatusServiceImpl userStatusService, PositionServiceImpl positionService, UserRoleService userRoleService, SalaryServiceImpl salaryService, PasswordEncoder passwordEncoder) {
@@ -74,14 +78,9 @@ public class UserServiceImpl implements ServiceInterface<User> {
         return user.get();
     }
 
-    public User findByLastname(String lastname) throws UserException {
-        Optional<User> user = Optional.ofNullable(userRepository.findByLastname(lastname));
-
-        if (user.isEmpty()) {
-            throw new UserException("User not found");
-        }
-
-        return user.get();
+    public List<User> findUserByPage(int indexOfPage) {
+        return userRepository.findAll(PageRequest.of(indexOfPage, COUNT_OF_USERS_ON_PAGE,
+                Sort.by("lastname"))).getContent();
     }
 
     public User findByEmail(String email) throws UserException {

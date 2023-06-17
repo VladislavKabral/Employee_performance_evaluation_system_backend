@@ -55,6 +55,14 @@ public class TeamController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("page/{indexOfPage}")
+    public List<TeamDTO> getTeamsByPage(@PathVariable("indexOfPage") int indexOfPage) {
+        return teamService.findTeamsByPage(indexOfPage)
+                .stream()
+                .map(this::convertToTeamDTO)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping("/{id}")
     public TeamDTO getTeam(@PathVariable("id") int id) throws TeamException {
         return convertToTeamDTO(teamService.findById(id));

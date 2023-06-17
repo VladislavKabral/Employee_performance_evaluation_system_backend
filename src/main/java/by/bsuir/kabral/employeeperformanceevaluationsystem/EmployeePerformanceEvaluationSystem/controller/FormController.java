@@ -49,6 +49,14 @@ public class FormController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("page/{indexOfPage}")
+    public List<FormDTO> getFormsByPage(@PathVariable("indexOfPage") int indexOfPage) {
+        return formService.findFormsByPage(indexOfPage)
+                .stream()
+                .map(this::convertToFormDTO)
+                .collect(Collectors.toList());
+    }
+
     @GetMapping("/{id}")
     public FormDTO getForm(@PathVariable("id") int id) throws FormException {
         return convertToFormDTO(formService.findById(id));

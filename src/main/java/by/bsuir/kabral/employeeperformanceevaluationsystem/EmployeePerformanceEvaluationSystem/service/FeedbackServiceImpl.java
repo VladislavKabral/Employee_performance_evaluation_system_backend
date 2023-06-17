@@ -4,6 +4,7 @@ import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEv
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.FeedbackRepository;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.FeedbackException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,8 @@ public class FeedbackServiceImpl implements ServiceInterface<Feedback> {
     private static final String FEEDBACK_STATUS_COMPLETED = "COMPLETED";
     private static final String FEEDBACK_STATUS_REQUIRED = "REQUIRED";
 
+    private static final int COUNT_OF_FEEDBACKS_ON_PAGE = 10;
+
     @Autowired
     public FeedbackServiceImpl(FeedbackRepository feedbackRepository, FeedbackStatusServiceImpl feedbackStatusService) {
         this.feedbackRepository = feedbackRepository;
@@ -31,6 +34,10 @@ public class FeedbackServiceImpl implements ServiceInterface<Feedback> {
     @Override
     public List<Feedback> findAll() {
         return feedbackRepository.findAll();
+    }
+
+    public List<Feedback> findFeedbacksByPage(int indexOfPage) {
+        return feedbackRepository.findAll(PageRequest.of(indexOfPage, COUNT_OF_FEEDBACKS_ON_PAGE)).getContent();
     }
 
     @Override

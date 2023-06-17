@@ -5,6 +5,7 @@ import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEv
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.repository.FormRepository;
 import by.bsuir.kabral.employeeperformanceevaluationsystem.EmployeePerformanceEvaluationSystem.util.exception.FormException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,8 @@ public class FormServiceImpl implements ServiceInterface<Form> {
 
     private final QuestionServiceImpl questionService;
 
+    private static final int COUNT_OF_FORMS_ON_PAGE = 10;
+
     @Autowired
     public FormServiceImpl(FormRepository formRepository, QuestionServiceImpl questionService) {
         this.formRepository = formRepository;
@@ -28,6 +31,10 @@ public class FormServiceImpl implements ServiceInterface<Form> {
     @Override
     public List<Form> findAll() {
         return formRepository.findAll();
+    }
+
+    public List<Form> findFormsByPage(int indexOfPage) {
+        return formRepository.findAll(PageRequest.of(indexOfPage, COUNT_OF_FORMS_ON_PAGE)).getContent();
     }
 
     @Override
