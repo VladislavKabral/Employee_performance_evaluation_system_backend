@@ -79,8 +79,12 @@ public class UserServiceImpl implements ServiceInterface<User> {
     }
 
     public List<User> findUserByPage(int indexOfPage) {
-        return userRepository.findAll(PageRequest.of(indexOfPage, COUNT_OF_USERS_ON_PAGE,
+        List<User> users = userRepository.findAll(PageRequest.of(indexOfPage, COUNT_OF_USERS_ON_PAGE,
                 Sort.by("lastname"))).getContent();
+
+        return users.stream()
+                .filter(user -> Objects.equals(user.getStatus().getName(), USER_STATUS_ACTIVE))
+                .toList();
     }
 
     public User findByEmail(String email) throws UserException {
